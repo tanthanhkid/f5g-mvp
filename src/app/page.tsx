@@ -159,11 +159,11 @@ export default function LoginPage() {
 
               <div className="mt-8 pt-6 border-t border-gray-200">
                 <div className="text-center">
-                  <p className="text-sm text-gray-600 mb-4">Tài khoản demo:</p>
-                  <div className="grid grid-cols-1 gap-2 text-xs text-gray-500">
-                    <div>student1@hust.edu.vn / 123456</div>
-                    <div>student1@bku.edu.vn / 123456</div>
-                    <div>student1@vnu.edu.vn / 123456</div>
+                  <p className="text-sm text-gray-700 mb-4 font-medium">Tài khoản demo:</p>
+                  <div className="grid grid-cols-1 gap-2 text-sm text-gray-800 font-mono">
+                    <div className="bg-gray-50 p-2 rounded">student1@hust.edu.vn / 123456</div>
+                    <div className="bg-gray-50 p-2 rounded">student1@bku.edu.vn / 123456</div>
+                    <div className="bg-gray-50 p-2 rounded">student1@vnu.edu.vn / 123456</div>
                   </div>
                 </div>
               </div>
