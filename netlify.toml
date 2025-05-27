@@ -8,7 +8,7 @@
 [build.environment]
   NODE_VERSION = "18"
 
-# Redirect rules for SPA
+# NextJS App Router support
 [[redirects]]
   from = "/*"
   to = "/index.html"
