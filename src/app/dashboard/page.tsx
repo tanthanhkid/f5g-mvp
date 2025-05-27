@@ -6,11 +6,13 @@ import { useAuth } from '@/contexts/AuthContext';
 import { School } from '@/types';
 import { BookOpen, Trophy, Users, Play, LogOut, Award } from 'lucide-react';
 import schoolsData from '../../../data/schools.json';
+import LoadingOverlay from '@/components/LoadingOverlay';
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const router = useRouter();
   const [userSchool, setUserSchool] = useState<School | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -28,11 +30,15 @@ export default function Dashboard() {
     router.push('/');
   };
 
-  const handleStartQuiz = () => {
+  const handleStartQuiz = async () => {
+    setIsLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 800));
     router.push('/quiz');
   };
 
-  const handleViewLeaderboard = () => {
+  const handleViewLeaderboard = async () => {
+    setIsLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 800));
     router.push('/leaderboard');
   };
 
@@ -48,7 +54,9 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+      <LoadingOverlay isVisible={isLoading} message="Đang tải..." />
+      <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -218,5 +226,6 @@ export default function Dashboard() {
         </div>
       </div>
     </div>
+    </>
   );
 } 

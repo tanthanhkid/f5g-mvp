@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Eye, EyeOff, BookOpen, Users, Trophy } from 'lucide-react';
+import LoadingOverlay from '@/components/LoadingOverlay';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -26,19 +27,23 @@ export default function LoginPage() {
     setError('');
     setIsLoading(true);
 
+    // Delay để user thấy loading effect
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
     const success = await login(email, password);
     
     if (success) {
       router.push('/dashboard');
     } else {
       setError('Email hoặc mật khẩu không đúng');
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <>
+      <LoadingOverlay isVisible={isLoading} message="Đang đăng nhập..." />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -176,5 +181,6 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

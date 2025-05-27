@@ -8,6 +8,7 @@ import { getRandomQuestions, calculateScore } from '@/lib/utils';
 import { Clock, CheckCircle, Circle, ArrowLeft, ArrowRight } from 'lucide-react';
 import quizzesData from '../../../data/quizzes.json';
 import settingsData from '../../../data/settings.json';
+import LoadingOverlay from '@/components/LoadingOverlay';
 
 export default function QuizPage() {
   const { user } = useAuth();
@@ -20,6 +21,7 @@ export default function QuizPage() {
   const [isCompleted, setIsCompleted] = useState(false);
   const [score, setScore] = useState(0);
   const [tutePointsEarned, setTutePointsEarned] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -109,7 +111,9 @@ export default function QuizPage() {
     setIsCompleted(true);
   };
 
-  const handleBackToDashboard = () => {
+  const handleBackToDashboard = async () => {
+    setIsLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 800));
     router.push('/dashboard');
   };
 
@@ -169,7 +173,9 @@ export default function QuizPage() {
   const currentAnswer = answers[currentQuestion] || [];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+      <LoadingOverlay isVisible={isLoading} message="Đang tải..." />
+      <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -279,5 +285,6 @@ export default function QuizPage() {
         </div>
       </div>
     </div>
+    </>
   );
 } 
