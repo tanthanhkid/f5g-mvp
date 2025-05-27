@@ -1,0 +1,50 @@
+[
+  {
+    "id": "1",
+    "email": "student1@hust.edu.vn",
+    "password": "123456",
+    "name": "Nguyễn Văn An",
+    "schoolId": "hust",
+    "tutePoints": 85
+  },
+  {
+    "id": "2", 
+    "email": "student2@hust.edu.vn",
+    "password": "123456",
+    "name": "Trần Thị Bình",
+    "schoolId": "hust",
+    "tutePoints": 92
+  },
+  {
+    "id": "3",
+    "email": "student1@bku.edu.vn", 
+    "password": "123456",
+    "name": "Lê Văn Cường",
+    "schoolId": "bku",
+    "tutePoints": 78
+  },
+  {
+    "id": "4",
+    "email": "student2@bku.edu.vn",
+    "password": "123456", 
+    "name": "Phạm Thị Dung",
+    "schoolId": "bku",
+    "tutePoints": 95
+  },
+  {
+    "id": "5",
+    "email": "student1@vnu.edu.vn",
+    "password": "123456",
+    "name": "Hoàng Văn Em",
+    "schoolId": "vnu", 
+    "tutePoints": 67
+  },
+  {
+    "id": "6",
+    "email": "student2@vnu.edu.vn",
+    "password": "123456",
+    "name": "Đỗ Thị Phương",
+    "schoolId": "vnu",
+    "tutePoints": 89
+  }
+] 

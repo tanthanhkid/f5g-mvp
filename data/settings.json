@@ -1,0 +1,12 @@
+{
+  "quizSettings": {
+    "questionsPerQuiz": 5,
+    "timePerQuestion": 30,
+    "tutePointsPerCorrectAnswer": 1
+  },
+  "appSettings": {
+    "appName": "Freedom Training",
+    "version": "1.0.0",
+    "supportEmail": "support@freedomtraining.edu.vn"
+  }
+} 

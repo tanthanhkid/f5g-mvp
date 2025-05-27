@@ -1,0 +1,37 @@
+[
+  {
+    "id": "hust",
+    "name": "Đại học Bách khoa Hà Nội",
+    "shortName": "HUST",
+    "logo": "/images/hust-logo.png",
+    "totalTutePoints": 177
+  },
+  {
+    "id": "bku", 
+    "name": "Đại học Bách khoa TP.HCM",
+    "shortName": "BKU",
+    "logo": "/images/bku-logo.png",
+    "totalTutePoints": 173
+  },
+  {
+    "id": "vnu",
+    "name": "Đại học Quốc gia Hà Nội", 
+    "shortName": "VNU",
+    "logo": "/images/vnu-logo.png",
+    "totalTutePoints": 156
+  },
+  {
+    "id": "hcmus",
+    "name": "Đại học Khoa học Tự nhiên TP.HCM",
+    "shortName": "HCMUS", 
+    "logo": "/images/hcmus-logo.png",
+    "totalTutePoints": 134
+  },
+  {
+    "id": "neu",
+    "name": "Đại học Kinh tế Quốc dân",
+    "shortName": "NEU",
+    "logo": "/images/neu-logo.png", 
+    "totalTutePoints": 98
+  }
+] 
