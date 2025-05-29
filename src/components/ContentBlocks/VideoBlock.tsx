@@ -31,12 +31,13 @@ export default function VideoBlock({
   onComplete, 
   onProgress, 
   isActive = false,
-  minimumWatchPercentage = 80 
+  minimumWatchPercentage = 0  // Đặt về 0 để không ràng buộc
 }: VideoBlockProps) {
   const [currentTime] = useState(0);
   const [duration] = useState(block.duration || 0);
   const [watchedPercentage, setWatchedPercentage] = useState(0);
-  const [canComplete, setCanComplete] = useState(false);
+  const [canComplete, setCanComplete] = useState(true); // Luôn cho phép tiếp tục
+  const [isCompleting, setIsCompleting] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   // Format time helper
@@ -57,27 +58,41 @@ export default function VideoBlock({
     }
   }, []);
 
-  // Track video progress
+  // Track video progress - chỉ để hiển thị, không ràng buộc
+  // Tạm thời comment out để tránh infinite loop
+  /*
   useEffect(() => {
     if (duration > 0) {
       const percentage = (currentTime / duration) * 100;
       setWatchedPercentage(percentage);
       
-      if (percentage >= minimumWatchPercentage && !canComplete) {
-        setCanComplete(true);
-      }
-      
       if (onProgress) {
         onProgress(currentTime, duration);
       }
     }
-  }, [currentTime, duration, minimumWatchPercentage, canComplete]);
+  }, [currentTime, duration, onProgress]); // Không bao gồm onProgress trong dependencies để tránh infinite loop
+  */
 
   const handleComplete = useCallback(() => {
-    if (canComplete && onComplete) {
-      onComplete();
+    console.log('VideoBlock handleComplete called', { blockId: block.id, onComplete, isCompleting });
+    if (isCompleting) {
+      console.log('Already completing, ignoring click');
+      return;
     }
-  }, [canComplete, onComplete]);
+    
+    if (onComplete) {
+      console.log('Calling onComplete for video block');
+      setIsCompleting(true);
+      // Thêm timeout để debug
+      setTimeout(() => {
+        onComplete();
+        // Reset sau khi hoàn thành
+        setTimeout(() => setIsCompleting(false), 1000);
+      }, 100);
+    } else {
+      console.log('onComplete is not provided');
+    }
+  }, [onComplete, block.id, isCompleting]);
 
   return (
     <div className={`bg-white rounded-lg shadow-sm border transition-all duration-300 ${
@@ -115,7 +130,7 @@ export default function VideoBlock({
           />
         </div>
 
-        {/* Progress Bar */}
+        {/* Progress Bar - chỉ để hiển thị */}
         <div className="mt-4">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm text-gray-600">Tiến độ xem</span>
@@ -130,23 +145,23 @@ export default function VideoBlock({
             />
           </div>
           <p className="text-xs text-gray-500 mt-1">
-            Cần xem tối thiểu {minimumWatchPercentage}% để tiếp tục
+            Bạn có thể tiếp tục bất cứ lúc nào
           </p>
         </div>
 
-        {/* Complete Button */}
+        {/* Complete Button - luôn active */}
         {onComplete && (
           <div className="mt-6 pt-4 border-t border-gray-100">
             <button
               onClick={handleComplete}
-              disabled={!canComplete}
+              disabled={isCompleting}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                canComplete
-                  ? 'bg-blue-600 text-white hover:bg-blue-700'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                isCompleting 
+                  ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                  : 'bg-blue-600 text-white hover:bg-blue-700'
               }`}
             >
-              {canComplete ? 'Tiếp tục' : `Xem thêm ${minimumWatchPercentage - Math.round(watchedPercentage)}%`}
+              {isCompleting ? 'Đang xử lý...' : 'Tiếp tục'}
             </button>
           </div>
         )}

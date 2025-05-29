@@ -249,7 +249,7 @@ export default function QuizPage() {
 
           {/* Options */}
           <div className="space-y-3">
-            {currentQuestionData.options.map((option, index) => {
+            {currentQuestionData.options?.map((option, index) => {
               const isSelected = currentAnswer.includes(index);
               return (
                 <button

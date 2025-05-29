@@ -58,7 +58,7 @@ const InvestorBubbles: React.FC<InvestorBubblesProps> = ({ investors, formatCurr
   const [hoveredBubble, setHoveredBubble] = useState<Bubble | null>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isClient, setIsClient] = useState(false);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number>(0);
   const currentBubblesRef = useRef<Bubble[]>([]);
 
   // Đảm bảo chỉ chạy trên client

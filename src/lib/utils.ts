@@ -28,9 +28,17 @@ export function calculateScore(questions: Quiz[], answers: number[][]): number {
     const correctAnswer = question.correctAnswer;
     
     // Kiểm tra xem câu trả lời có đúng không
-    if (userAnswer.length === correctAnswer.length) {
-      const isCorrect = correctAnswer.every(answer => userAnswer.includes(answer));
-      if (isCorrect) {
+    if (Array.isArray(correctAnswer)) {
+      if (userAnswer.length === correctAnswer.length) {
+        const isCorrect = correctAnswer.every(answer => userAnswer.includes(answer));
+        if (isCorrect) {
+          correct++;
+        }
+      }
+    } else {
+      // For text type questions, convert to string comparison
+      const userAnswerStr = userAnswer.join(',');
+      if (userAnswerStr === correctAnswer) {
         correct++;
       }
     }

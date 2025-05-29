@@ -62,7 +62,7 @@ export default function LessonViewer({ lesson, onComplete, onExit }: LessonViewe
       if (block.type === 'video') {
         const watchTime = videoWatchTime[block.id] || 0;
         const duration = block.duration || 0;
-        if (duration > 0 && (watchTime / duration) >= 0.8) {
+        if (duration > 0 && watchTime > 0) {
           points += 5;
         }
       }

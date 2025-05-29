@@ -7,7 +7,7 @@
   "learningSettings": {
     "tutePointsPerLessonCompletion": 50,
     "tutePointsPerVideoWatched": 5,
-    "minimumVideoWatchPercentage": 80
+    "minimumVideoWatchPercentage": 0
   },
   "appSettings": {
     "appName": "Freedom Training",

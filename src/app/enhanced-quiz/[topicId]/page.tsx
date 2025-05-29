@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { flushSync } from 'react-dom';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { ContentBlock, Quiz, EnhancedQuizSession } from '@/types';
@@ -30,6 +31,12 @@ export default function EnhancedQuizPage() {
   const [topic, setTopic] = useState<QuizTopic | null>(null);
   const [session, setSession] = useState<EnhancedQuizSession | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  // Debug: Log session changes
+  useEffect(() => {
+    console.log('Session state changed:', session);
+  }, [session]);
 
   useEffect(() => {
     if (!user) {
@@ -70,37 +77,50 @@ export default function EnhancedQuizPage() {
   }, [user, router, topicId]);
 
   const handleBlockComplete = (blockId: string, data?: { answer: number[] | string; isCorrect: boolean }) => {
-    if (!session) return;
+    try {
+      console.log('handleBlockComplete called', { blockId, session, data, isProcessing });
+      if (!session || isProcessing) return;
 
-    const updatedSession = { ...session };
-    
-    // Mark block as completed
-    if (!updatedSession.learningProgress.completedBlocks.includes(blockId)) {
-      updatedSession.learningProgress.completedBlocks.push(blockId);
+      setIsProcessing(true);
+
+      const updatedSession = { ...session };
+      
+      // Mark block as completed
+      if (!updatedSession.learningProgress.completedBlocks.includes(blockId)) {
+        updatedSession.learningProgress.completedBlocks.push(blockId);
+      }
+
+      console.log('Before navigation logic', {
+        currentBlockIndex: updatedSession.currentBlockIndex,
+        totalBlocks: updatedSession.learningContent.length,
+        completedBlocks: updatedSession.learningProgress.completedBlocks
+      });
+
+      // Move to next block or switch to quiz phase
+      if (updatedSession.currentBlockIndex < updatedSession.learningContent.length - 1) {
+        updatedSession.currentBlockIndex += 1;
+        console.log('Moving to next block:', updatedSession.currentBlockIndex);
+      } else {
+        // All learning content completed, switch to quiz phase
+        updatedSession.phase = 'quiz';
+        updatedSession.currentQuestionIndex = 0;
+        updatedSession.answers = new Array(updatedSession.questions.length).fill([]);
+        console.log('Switching to quiz phase');
+      }
+
+      console.log('Setting updated session:', updatedSession);
+      flushSync(() => {
+        setSession(updatedSession);
+      });
+      
+      // Reset processing flag after a short delay
+      setTimeout(() => {
+        setIsProcessing(false);
+      }, 500);
+    } catch (error) {
+      console.error('Error in handleBlockComplete:', error);
+      setIsProcessing(false);
     }
-
-    // Move to next block or switch to quiz phase
-    if (updatedSession.currentBlockIndex < updatedSession.learningContent.length - 1) {
-      updatedSession.currentBlockIndex += 1;
-    } else {
-      // All learning content completed, switch to quiz phase
-      updatedSession.phase = 'quiz';
-      updatedSession.currentQuestionIndex = 0;
-      updatedSession.answers = new Array(updatedSession.questions.length).fill([]);
-    }
-
-    setSession(updatedSession);
-  };
-
-  const handleVideoProgress = (videoId: string, watchedTime: number) => {
-    if (!session) return;
-
-    const updatedSession = { ...session };
-    updatedSession.learningProgress.videoWatchTime[videoId] = Math.max(
-      updatedSession.learningProgress.videoWatchTime[videoId] || 0,
-      watchedTime
-    );
-    setSession(updatedSession);
   };
 
   const handleQuizAnswer = (answer: number[] | string, isCorrect: boolean) => {
@@ -164,7 +184,7 @@ export default function EnhancedQuizPage() {
       if (block.type === 'video') {
         const watchTime = completedSession.learningProgress.videoWatchTime[block.id] || 0;
         const duration = block.duration || 0;
-        if (duration > 0 && (watchTime / duration) >= 0.8) {
+        if (duration > 0 && watchTime > 0) {
           tutePoints += 5;
         }
       }
@@ -674,6 +694,7 @@ export default function EnhancedQuizPage() {
                 <>
                   {currentContent.type === 'text' && (
                     <TextBlock
+                      key={currentContent.id}
                       block={currentContent}
                       onComplete={() => handleBlockComplete(currentContent.id)}
                       isActive={true}
@@ -682,11 +703,9 @@ export default function EnhancedQuizPage() {
 
                   {currentContent.type === 'video' && (
                     <VideoBlock
+                      key={currentContent.id}
                       block={currentContent}
                       onComplete={() => handleBlockComplete(currentContent.id)}
-                      onProgress={(watchedTime) => 
-                        handleVideoProgress(currentContent.id, watchedTime)
-                      }
                       isActive={true}
                     />
                   )}
