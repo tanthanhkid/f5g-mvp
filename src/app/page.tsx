@@ -1,55 +1,112 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
-import { Eye, EyeOff, BookOpen, Users, Trophy } from 'lucide-react';
-import LoadingOverlay from '@/components/LoadingOverlay';
+import { BookOpen, Trophy, Users, ArrowRight, Sparkles, Target, Award, TrendingUp, Bell, Gift } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
+import investorsData from '../../data/investors.json';
+import InvestorShowcase from '../components/InvestorShowcase';
+import { useNotificationContext } from '../contexts/NotificationContext';
 
-export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  
-  const { login, user } = useAuth();
+interface Investor {
+  id: number;
+  name: string;
+  shortName?: string;
+  stockCode?: string;
+  logo: string;
+  dailyContribution: number;
+  percentage: number;
+  tier: string;
+  color: string;
+  sector?: string;
+}
+
+interface InvestorData {
+  dailyPool: number;
+  totalPool: number;
+  investors: Investor[];
+  minorSponsors?: string[];
+}
+
+export default function HomePage() {
   const router = useRouter();
+  const [currentDate, setCurrentDate] = useState('');
+  const [isLoaded, setIsLoaded] = useState(false);
+  const notifications = useNotificationContext();
+  const hasShownWelcome = useRef(false);
 
   useEffect(() => {
-    if (user) {
-      router.push('/dashboard');
-    }
-  }, [user, router]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setIsLoading(true);
-
-    // Delay để user thấy loading effect
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    const success = await login(email, password);
+    const today = new Date();
+    setCurrentDate(today.toLocaleDateString('vi-VN', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    }));
     
-    if (success) {
-      router.push('/dashboard');
-    } else {
-      setError('Email hoặc mật khẩu không đúng');
-      setIsLoading(false);
+    // Animation delay
+    setTimeout(() => setIsLoaded(true), 100);
+
+    // Welcome notification - chỉ hiển thị 1 lần
+    if (!hasShownWelcome.current) {
+      hasShownWelcome.current = true;
+      setTimeout(() => {
+        notifications.success(
+          'Chào mừng đến với Freedom Training!',
+          'Khám phá nền tảng học tập thông minh với phần thưởng TUTE thực tế',
+          { duration: 6000 }
+        );
+      }, 2000);
     }
+  }, []); // Bỏ notifications khỏi dependency array
+
+  const handleLearnToEarn = () => {
+    notifications.info(
+      'Đang chuyển hướng...',
+      'Bạn sẽ được chuyển đến trang đăng nhập để bắt đầu hành trình học tập',
+      { duration: 3000 }
+    );
+    
+    setTimeout(() => {
+      router.push('/login');
+    }, 1000);
+  };
+
+  const handleDemoNotifications = () => {
+    const demos = [
+      () => notifications.success('Hoàn thành bài quiz!', 'Bạn đã kiếm được 50 TUTE từ bài quiz Toán học'),
+      () => notifications.warning('Pool sắp hết!', 'Chỉ còn 42.3% pool tài trợ, hãy nhanh tay tham gia'),
+      () => notifications.info('Thông báo mới', 'Có 5 bài quiz mới được thêm vào hệ thống')
+    ];
+    
+    demos.forEach((demo, index) => {
+      setTimeout(demo, index * 1500);
+    });
+  };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
   };
 
   return (
-    <>
-      <LoadingOverlay isVisible={isLoading} message="Đang đăng nhập..." />
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-indigo-400/20 to-cyan-600/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-purple-400/10 to-pink-600/10 rounded-full blur-3xl animate-pulse delay-500"></div>
+      </div>
+
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="relative z-10 bg-white/80 backdrop-blur-lg shadow-lg border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-lg overflow-hidden">
+            <div className={`flex items-center space-x-3 transition-all duration-700 ${isLoaded ? 'translate-x-0 opacity-100' : '-translate-x-10 opacity-0'}`}>
+              <div className="w-12 h-12 rounded-xl overflow-hidden shadow-lg ring-2 ring-blue-500/20">
                 <img 
                   src="/17164524823262_logo-web-con-voi.png" 
                   alt="Freedom Training Logo" 
@@ -57,130 +114,208 @@ export default function LoginPage() {
                 />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Freedom Training</h1>
-                <p className="text-sm text-gray-600">Nền tảng học tập trực tuyến</p>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  Freedom Training
+                </h1>
+                <p className="text-sm text-gray-600">Nền tảng học tập thông minh</p>
               </div>
+            </div>
+            
+            <div className="flex items-center space-x-3">
+              {/* Demo Notifications Button */}
+              {/* <button
+                onClick={handleDemoNotifications}
+                className={`group bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center space-x-2 ${isLoaded ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}
+              >
+                <Bell className="w-4 h-4" />
+                <span className="hidden sm:inline">Demo</span>
+              </button> */}
+              
+              <button
+                onClick={handleLearnToEarn}
+                className={`group bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center space-x-2 ${isLoaded ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}
+              >
+                <span>Đăng nhập</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex min-h-[calc(100vh-80px)]">
-        {/* Left side - Features */}
-        <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-indigo-700 p-12 text-white">
-          <div className="max-w-md mx-auto flex flex-col justify-center">
-            <h2 className="text-4xl font-bold mb-8">Chào mừng đến với Freedom Training</h2>
-            <div className="space-y-6">
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <BookOpen className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">Học tập hiệu quả</h3>
-                  <p className="text-blue-100">Hệ thống quiz đa dạng với nhiều chủ đề khác nhau</p>
-                </div>
+      {/* Hero Section */}
+      <div className="relative z-10 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="text-center">
+            <div className={`transition-all duration-1000 delay-200 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+              <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 text-sm font-medium mb-6 border border-blue-200/50">
+                <Sparkles className="w-4 h-4 mr-2" />
+                Nền tảng học tập với phần thưởng thực tế
               </div>
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Trophy className="w-6 h-6" />
+              
+              <h1 className="text-6xl md:text-7xl font-bold mb-6">
+                <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                  Freedom
+                </span>
+                <br />
+                <span className="bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                  Training
+                </span>
+              </h1>
+              
+              <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-4xl mx-auto leading-relaxed">
+                Học tập thông minh, kiếm điểm TUTE với hệ thống phần thưởng 
+                <span className="font-semibold text-blue-600"> TUTE </span>
+                độc đáo từ các doanh nghiệp hàng đầu Việt Nam
+              </p>
+            </div>
+            
+            {/* Quick Stats */}
+            <div className={`grid grid-cols-1 md:grid-cols-4 gap-6 mb-16 transition-all duration-1000 delay-400 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:scale-105 group cursor-pointer"
+                   onClick={() => notifications.info('Thống kê Nhà Tài Trợ', `Hiện có ${investorsData.investors.length} Nhà Tài Trợ đang tài trợ cho nền tảng`)}>
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                  <Users className="w-6 h-6 text-white" />
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">Tích lũy điểm TUTE</h3>
-                  <p className="text-blue-100">Nhận điểm thưởng cho mỗi câu trả lời đúng</p>
-                </div>
+                <div className="text-2xl font-bold text-gray-900 mb-1">{investorsData.investors.length}+</div>
+                <div className="text-sm text-gray-600">Nhà Tài Trợ</div>
               </div>
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Users className="w-6 h-6" />
+              
+              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:scale-105 group cursor-pointer"
+                   onClick={() => notifications.success('Pool tài trợ', `Tổng pool hiện tại: ${formatCurrency(investorsData.totalPool)}`)}>
+                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                  <Target className="w-6 h-6 text-white" />
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">Thi đua giữa các trường</h3>
-                  <p className="text-blue-100">Xem bảng xếp hạng và cạnh tranh với các trường khác</p>
+                <div className="text-2xl font-bold text-gray-900 mb-1">2B+</div>
+                <div className="text-sm text-gray-600">VND Pool</div>
+              </div>
+              
+              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:scale-105 group cursor-pointer"
+                   onClick={() => notifications.warning('TUTE còn lại', 'Nhanh tay tham gia để nhận TUTE trước khi hết!')}>
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                  <Award className="w-6 h-6 text-white" />
                 </div>
+                <div className="text-2xl font-bold text-gray-900 mb-1">845K</div>
+                <div className="text-sm text-gray-600">TUTE còn lại</div>
+              </div>
+              
+              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:scale-105 group cursor-pointer"
+                   onClick={() => notifications.info('Pool khả dụng', 'Còn 42.3% pool để các bạn sinh viên có thể kiếm TUTE')}>
+                <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                  <TrendingUp className="w-6 h-6 text-white" />
+                </div>
+                <div className="text-2xl font-bold text-gray-900 mb-1">42.3%</div>
+                <div className="text-sm text-gray-600">Pool khả dụng</div>
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* Right side - Login form */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-          <div className="max-w-md w-full">
-            <div className="bg-white rounded-2xl shadow-xl p-8">
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">Đăng nhập</h2>
-                <p className="text-gray-600">Chào mừng bạn quay trở lại!</p>
-              </div>
+            {/* Showcase Nhà Tài Trợ */}
+            <div className={`max-w-6xl mx-auto mb-16 transition-all duration-1000 delay-600 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+              <InvestorShowcase 
+                investorData={investorsData as InvestorData} 
+                formatCurrency={formatCurrency}
+              />
+            </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-900"
-                    placeholder="Nhập email của bạn"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                    Mật khẩu
-                  </label>
-                  <div className="relative">
-                    <input
-                      id="password"
-                      type={showPassword ? 'text' : 'password'}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors pr-12 text-gray-900"
-                      placeholder="Nhập mật khẩu"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                    >
-                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
-                  </div>
-                </div>
-
-                {error && (
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                    <p className="text-red-600 text-sm">{error}</p>
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-indigo-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
-                </button>
-              </form>
-
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <div className="text-center">
-                  <p className="text-sm text-gray-700 mb-4 font-medium">Tài khoản demo:</p>
-                  <div className="grid grid-cols-1 gap-2 text-sm text-gray-800 font-mono">
-                    <div className="bg-gray-50 p-2 rounded">student1@hust.edu.vn / 123456</div>
-                    <div className="bg-gray-50 p-2 rounded">student1@bku.edu.vn / 123456</div>
-                    <div className="bg-gray-50 p-2 rounded">student1@vnu.edu.vn / 123456</div>
-                  </div>
-                </div>
-              </div>
+            <div className={`transition-all duration-1000 delay-800 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+              <button
+                onClick={handleLearnToEarn}
+                className="group bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white px-16 py-5 rounded-2xl text-xl font-bold hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl flex items-center mx-auto relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                <Gift className="w-6 h-6 mr-3 relative z-10" />
+                <span className="relative z-10">Learn to Earn</span>
+                <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform relative z-10" />
+              </button>
+              
+              <p className="text-gray-500 text-sm mt-4">
+                🎯 Bắt đầu hành trình học tập và kiếm điểm TUTE ngay hôm nay
+              </p>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Features Section */}
+      <div className="relative z-10 bg-white/50 backdrop-blur-sm py-20 border-y border-white/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-4">
+              Tại sao chọn Freedom Training?
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Nền tảng học tập thông minh với hệ thống phần thưởng độc đáo
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="group text-center p-8 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 hover:shadow-2xl transition-all duration-300 hover:scale-105">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <BookOpen className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Học tập hiệu quả</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Hệ thống quiz đa dạng với nhiều chủ đề khác nhau, được thiết kế đặc biệt 
+                cho sinh viên các trường đại học tại Việt Nam
+              </p>
+            </div>
+            
+            <div className="group text-center p-8 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 hover:shadow-2xl transition-all duration-300 hover:scale-105">
+              <div className="w-20 h-20 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <Trophy className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Tích lũy điểm TUTE</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Mỗi câu trả lời đúng sẽ được cộng điểm TUTE có giá trị thực tế. 
+                Tích lũy để nhận phần thưởng từ các doanh nghiệp
+              </p>
+            </div>
+            
+            <div className="group text-center p-8 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 hover:shadow-2xl transition-all duration-300 hover:scale-105">
+              <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <Users className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Thi đua giữa các trường</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Cạnh tranh lành mạnh giữa các trường đại học, tạo động lực học tập 
+                và xây dựng cộng đồng sinh viên năng động
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="relative z-10 bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="flex items-center justify-center space-x-3 mb-6">
+              <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg">
+                <img 
+                  src="/17164524823262_logo-web-con-voi.png" 
+                  alt="Freedom Training Logo" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                Freedom Training
+              </h3>
+            </div>
+            <p className="text-gray-300 mb-6 text-lg">
+              Nền tảng đào tạo dựa trên công nghệ Blockchain hàng đầu hiện nay
+            </p>
+            <div className="flex justify-center space-x-6 mb-8">
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">Về chúng tôi</a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">Điều khoản</a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">Bảo mật</a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">Liên hệ</a>
+            </div>
+            <p className="text-sm text-gray-500">
+              © 2025 Freedom Training. Tất cả quyền được bảo lưu.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
-    </>
   );
 }

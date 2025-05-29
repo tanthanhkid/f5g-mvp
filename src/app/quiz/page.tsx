@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Quiz } from '@/types';
 import { getRandomQuestions, calculateScore } from '@/lib/utils';
-import { Clock, CheckCircle, Circle, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Clock, CheckCircle, ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import quizzesData from '../../../data/quizzes.json';
 import settingsData from '../../../data/settings.json';
 import LoadingOverlay from '@/components/LoadingOverlay';
@@ -25,7 +25,7 @@ export default function QuizPage() {
 
   useEffect(() => {
     if (!user) {
-      router.push('/');
+      router.push('/login');
       return;
     }
 
@@ -188,6 +188,21 @@ export default function QuizPage() {
               <span>Quay lại</span>
             </button>
             
+            {/* Logo ở giữa */}
+            <button 
+              onClick={() => router.push('/')}
+              className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+            >
+              <div className="w-8 h-8 rounded-lg overflow-hidden">
+                <img 
+                  src="/17164524823262_logo-web-con-voi.png" 
+                  alt="Freedom Training Logo" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <span className="text-lg font-bold text-gray-900">Freedom Training</span>
+            </button>
+            
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2 text-gray-600">
                 <Clock className="w-5 h-5" />
@@ -242,21 +257,27 @@ export default function QuizPage() {
                   onClick={() => handleAnswerSelect(index)}
                   className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
                     isSelected
-                      ? 'border-blue-500 bg-blue-50 text-blue-900'
+                      ? 'border-blue-500 bg-blue-50'
                       : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                   }`}
                 >
                   <div className="flex items-center space-x-3">
                     {currentQuestionData.type === 'single' ? (
-                      <Circle className={`w-5 h-5 ${isSelected ? 'text-blue-600' : 'text-gray-400'}`} />
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                        isSelected ? 'bg-blue-600 border-blue-600' : 'border-gray-400'
+                      }`}>
+                        {isSelected && <Check className="w-3 h-3 text-white" />}
+                      </div>
                     ) : (
                       <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
                         isSelected ? 'bg-blue-600 border-blue-600' : 'border-gray-300'
                       }`}>
-                        {isSelected && <CheckCircle className="w-3 h-3 text-white" />}
+                        {isSelected && <Check className="w-3 h-3 text-white" />}
                       </div>
                     )}
-                    <span className="text-lg">{option}</span>
+                    <span className={`text-lg font-medium ${isSelected ? 'text-blue-900' : 'text-gray-900'}`}>
+                      {option}
+                    </span>
                   </div>
                 </button>
               );

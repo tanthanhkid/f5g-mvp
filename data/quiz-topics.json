@@ -1,0 +1,576 @@
+[
+  {
+    "id": "safety-water",
+    "title": "An toàn khi gặp nước",
+    "description": "Kỹ năng sinh tồn khi rơi xuống nước, cách tự cứu và sơ cứu",
+    "icon": "🏊‍♂️",
+    "difficulty": "beginner",
+    "estimatedTime": 20,
+    "category": "An toàn",
+    "ageGroup": "Mọi lứa tuổi",
+    "keywords": ["an toàn", "nước", "bơi", "sinh tồn", "sơ cứu", "tai nạn"],
+    "learningContent": [
+      {
+        "type": "text",
+        "id": "water_safety_intro",
+        "title": "Tại sao cần biết an toàn khi gặp nước?",
+        "content": "<h2>An toàn khi gặp nước - Kỹ năng sống còn</h2><p>Mỗi năm có hàng nghìn người gặp tai nạn đuối nước. Việc biết cách xử lý khi rơi xuống nước có thể cứu sống bạn và người khác.</p><h3>Những tình huống thường gặp:</h3><ul><li><strong>Rơi xuống sông, hồ</strong> khi đi qua cầu hoặc bờ trơn trượt</li><li><strong>Bị sóng cuốn</strong> khi tắm biển</li><li><strong>Xe rơi xuống nước</strong> do tai nạn giao thông</li><li><strong>Trẻ em rơi xuống bể bơi</strong> khi không có người lớn giám sát</li></ul><p><strong>Nhớ:</strong> Giữ bình tĩnh là yếu tố quan trọng nhất!</p>"
+      },
+      {
+        "type": "video",
+        "id": "water_survival_basics",
+        "youtubeId": "DNASZXravAg",
+        "title": "Kỹ năng sinh tồn khi rơi xuống nước",
+        "description": "Học cách tự cứu khi không biết bơi",
+        "duration": 480
+      },
+      {
+        "type": "text",
+        "id": "water_rescue_techniques",
+        "title": "Kỹ thuật tự cứu cơ bản",
+        "content": "<h3>Khi rơi xuống nước sâu:</h3><ol><li><strong>Giữ bình tĩnh</strong> - Đừng hoảng loạn, vùng vẫy</li><li><strong>Nín thở</strong> - Giữ hơi thở khi chìm xuống</li><li><strong>Nổi tự nhiên</strong> - Thả lỏng cơ thể, để cơ thể nổi lên</li><li><strong>Tư thế sao biển</strong> - Nằm ngửa, tay chân dang rộng</li><li><strong>Thở nhẹ</strong> - Hít thở từ từ khi đầu nổi lên</li><li><strong>Bơi về bờ</strong> - Di chuyển từ từ về phía bờ gần nhất</li></ol><h3>Nếu không thể bơi:</h3><ul><li>Tìm vật nổi để bám vào (gỗ, phao, chai nhựa)</li><li>Gọi to để xin giúp đỡ</li><li>Vẫy tay để thu hút sự chú ý</li><li>Cố gắng di chuyển về phía bờ bằng cách đạp chân</li></ul>"
+      }
+    ],
+    "quizQuestions": [
+      {
+        "id": "q1",
+        "question": "Điều đầu tiên cần làm khi rơi xuống nước là gì?",
+        "type": "single",
+        "options": [
+          "Vùng vẫy mạnh để nổi lên",
+          "Giữ bình tĩnh và nín thở",
+          "Gọi to xin giúp đỡ ngay",
+          "Cố gắng bơi về bờ nhanh nhất"
+        ],
+        "correctAnswer": [1],
+        "category": "An toàn nước",
+        "explanation": "Giữ bình tĩnh và nín thở giúp bạn không uống nước và có thời gian suy nghĩ cách tự cứu.",
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": "q2",
+        "question": "Tư thế nào giúp cơ thể nổi tự nhiên trên mặt nước?",
+        "type": "single",
+        "options": [
+          "Cuộn tròn như quả bóng",
+          "Đứng thẳng trong nước",
+          "Nằm ngửa, tay chân dang rộng (tư thế sao biển)",
+          "Nằm sấp và đạp chân"
+        ],
+        "correctAnswer": [2],
+        "category": "An toàn nước",
+        "explanation": "Tư thế sao biển (nằm ngửa, tay chân dang rộng) giúp cơ thể nổi tự nhiên nhờ lực đẩy Archimedes.",
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": "q3",
+        "question": "Khi không biết bơi và rơi xuống nước, bạn nên tìm những vật gì để bám vào?",
+        "type": "multiple",
+        "options": [
+          "Gỗ nổi",
+          "Chai nhựa rỗng",
+          "Đá nặng",
+          "Phao bơi",
+          "Túi nilon đầy nước"
+        ],
+        "correctAnswer": [0, 1, 3],
+        "category": "An toàn nước",
+        "explanation": "Chỉ bám vào các vật có thể nổi trên mặt nước như gỗ, chai nhựa rỗng, phao bơi. Tránh đá nặng và túi nước vì chúng sẽ kéo bạn chìm xuống.",
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": "q4",
+        "question": "Khi thấy người khác bị đuối nước, bạn nên làm gì đầu tiên?",
+        "type": "single",
+        "options": [
+          "Nhảy xuống nước cứu ngay",
+          "Gọi 115 và người có kinh nghiệm",
+          "Ném một viên đá để đánh thức họ",
+          "Chờ xem tình hình"
+        ],
+        "correctAnswer": [1],
+        "category": "An toàn nước",
+        "explanation": "Gọi 115 và người có kinh nghiệm trước. Không nên tự ý cứu nạn nếu không có kỹ năng vì có thể gây nguy hiểm cho cả hai.",
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": "q5",
+        "question": "Những dấu hiệu nào cho thấy một khu vực nước nguy hiểm?",
+        "type": "multiple",
+        "options": [
+          "Nước chảy xiết",
+          "Có biển cảnh báo nguy hiểm",
+          "Nước trong vắt",
+          "Có xoáy nước",
+          "Có người đang tắm"
+        ],
+        "correctAnswer": [0, 1, 3],
+        "category": "An toàn nước",
+        "explanation": "Nước chảy xiết, biển cảnh báo và xoáy nước đều là dấu hiệu nguy hiểm. Nước trong vắt và có người tắm không phải dấu hiệu nguy hiểm.",
+        "difficulty": "easy",
+        "points": 10
+      }
+    ]
+  },
+  {
+    "id": "first-aid-basics",
+    "title": "Sơ cứu cơ bản",
+    "description": "Kỹ năng sơ cứu thiết yếu trong các tình huống khẩn cấp",
+    "icon": "🚑",
+    "difficulty": "beginner",
+    "estimatedTime": 25,
+    "category": "Y tế",
+    "ageGroup": "Từ 12 tuổi trở lên",
+    "keywords": ["sơ cứu", "y tế", "khẩn cấp", "tai nạn", "chăm sóc", "an toàn"],
+    "learningContent": [
+      {
+        "type": "text",
+        "id": "first_aid_intro",
+        "title": "Sơ cứu là gì và tại sao quan trọng?",
+        "content": "<h2>Sơ cứu - Kỹ năng cứu sống</h2><p>Sơ cứu là những biện pháp chăm sóc y tế ban đầu được thực hiện ngay tại chỗ khi có tai nạn hoặc bệnh đột ngột.</p><h3>Tại sao cần học sơ cứu?</h3><ul><li><strong>Cứu sống</strong> - Có thể cứu sống người bị nạn trong những phút đầu quan trọng</li><li><strong>Giảm đau</strong> - Làm giảm đau đớn và khó chịu cho nạn nhân</li><li><strong>Ngăn ngừa</strong> - Tránh tình trạng trở nên nghiêm trọng hơn</li><li><strong>Tự tin</strong> - Giúp bạn tự tin xử lý các tình huống khẩn cấp</li></ul><h3>Nguyên tắc 3 C trong sơ cứu:</h3><ol><li><strong>Check (Kiểm tra)</strong> - Đánh giá tình huống và an toàn</li><li><strong>Call (Gọi)</strong> - Gọi cấp cứu 115</li><li><strong>Care (Chăm sóc)</strong> - Thực hiện sơ cứu phù hợp</li></ol>"
+      },
+      {
+        "type": "video",
+        "id": "cpr_basics",
+        "youtubeId": "Im2njVVmxEI",
+        "title": "Hướng dẫn CPR (Hồi sức tim phổi) cơ bản",
+        "description": "Kỹ thuật CPR cứu sống khi tim ngừng đập",
+        "duration": 360
+      },
+      {
+        "type": "text",
+        "id": "common_emergencies",
+        "title": "Xử lý các tình huống thường gặp",
+        "content": "<h3>1. Vết thương chảy máu:</h3><ul><li><strong>Ép trực tiếp:</strong> Dùng băng sạch ép lên vết thương</li><li><strong>Nâng cao:</strong> Nâng vùng bị thương lên cao hơn tim</li><li><strong>Điểm ép:</strong> Ép các điểm huyết áp nếu máu vẫn chảy</li></ul><h3>2. Bỏng:</h3><ul><li><strong>Làm mát:</strong> Rửa bằng nước lạnh 10-20 phút</li><li><strong>Che phủ:</strong> Dùng băng sạch, không dính</li><li><strong>Không:</strong> Bôi kem đánh răng, dầu ăn</li></ul><h3>3. Gãy xương:</h3><ul><li><strong>Cố định:</strong> Không di chuyển vùng bị gãy</li><li><strong>Nẹp:</strong> Dùng vật cứng làm nẹp tạm thời</li><li><strong>Đưa viện:</strong> Gọi cấp cứu ngay lập tức</li></ul><h3>4. Ngạt thở:</h3><ul><li><strong>Thủ thuật Heimlich:</strong> Ôm từ phía sau, ép mạnh vào bụng</li><li><strong>Trẻ em:</strong> Úp sấp, vỗ lưng 5 lần</li></ul>"
+      }
+    ],
+    "quizQuestions": [
+      {
+        "id": "q1",
+        "question": "Số điện thoại cấp cứu ở Việt Nam là gì?",
+        "type": "single",
+        "options": [
+          "113",
+          "114", 
+          "115",
+          "116"
+        ],
+        "correctAnswer": [2],
+        "category": "Sơ cứu",
+        "explanation": "115 là số điện thoại cấp cứu y tế ở Việt Nam, cần nhớ để gọi khi có tình huống khẩn cấp.",
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": "q2",
+        "question": "Khi có người bị vết thương chảy máu nhiều, điều đầu tiên cần làm là gì?",
+        "type": "single",
+        "options": [
+          "Rửa vết thương bằng nước",
+          "Ép trực tiếp lên vết thương bằng băng sạch",
+          "Bôi thuốc kháng sinh",
+          "Băng bó ngay lập tức"
+        ],
+        "correctAnswer": [1],
+        "category": "Sơ cứu",
+        "explanation": "Ép trực tiếp bằng băng sạch là cách nhanh nhất để cầm máu và ngăn ngừa mất máu quá nhiều.",
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": "q3",
+        "question": "Nguyên tắc 3C trong sơ cứu bao gồm những gì?",
+        "type": "multiple",
+        "options": [
+          "Check (Kiểm tra)",
+          "Call (Gọi cấp cứu)",
+          "Care (Chăm sóc)",
+          "Clean (Làm sạch)",
+          "Calm (Bình tĩnh)"
+        ],
+        "correctAnswer": [0, 1, 2],
+        "category": "Sơ cứu",
+        "explanation": "3C là Check (kiểm tra tình huống), Call (gọi cấp cứu), Care (chăm sóc nạn nhân) - quy trình chuẩn trong sơ cứu.",
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": "q4",
+        "question": "Khi thực hiện CPR cho người lớn, tần suất ép tim là bao nhiêu lần/phút?",
+        "type": "single",
+        "options": [
+          "60-80 lần/phút",
+          "100-120 lần/phút",
+          "140-160 lần/phút",
+          "180-200 lần/phút"
+        ],
+        "correctAnswer": [1],
+        "category": "Sơ cứu",
+        "explanation": "Tần suất ép tim chuẩn trong CPR là 100-120 lần/phút để đảm bảo hiệu quả tuần hoàn máu.",
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": "q5",
+        "question": "Khi xử lý vết bỏng, những việc nào KHÔNG nên làm?",
+        "type": "multiple",
+        "options": [
+          "Bôi kem đánh răng",
+          "Rửa bằng nước lạnh",
+          "Bôi dầu ăn",
+          "Che phủ bằng băng sạch",
+          "Chọc vỡ các vết phồng rộp"
+        ],
+        "correctAnswer": [0, 2, 4],
+        "category": "Sơ cứu",
+        "explanation": "Không bôi kem đánh răng, dầu ăn hay chọc vỡ phồng rộp vì sẽ làm tăng nguy cơ nhiễm trùng và tổn thương thêm.",
+        "difficulty": "easy",
+        "points": 10
+      }
+    ]
+  },
+  {
+    "id": "road-safety-kids",
+    "title": "An toàn giao thông cho trẻ em",
+    "description": "Kỹ năng tham gia giao thông an toàn dành cho trẻ em",
+    "icon": "🚸",
+    "difficulty": "beginner",
+    "estimatedTime": 15,
+    "category": "An toàn",
+    "ageGroup": "Trẻ em 6-15 tuổi",
+    "keywords": ["giao thông", "trẻ em", "an toàn", "đường phố", "xe cộ"],
+    "learningContent": [
+      {
+        "type": "text",
+        "id": "traffic_safety_intro",
+        "title": "Tại sao trẻ em cần học an toàn giao thông?",
+        "content": "<h2>An toàn giao thông - Bảo vệ bản thân trên đường</h2><p>Mỗi ngày chúng ta đều phải tham gia giao thông. Việc biết các quy tắc an toàn sẽ giúp bảo vệ bản thân và người khác.</p><h3>Những nguy hiểm thường gặp:</h3><ul><li><strong>Băng qua đường</strong> không quan sát</li><li><strong>Chơi trên đường</strong> hoặc gần đường</li><li><strong>Không đội mũ bảo hiểm</strong> khi đi xe máy</li><li><strong>Ngồi sai vị trí</strong> trên xe ô tô</li></ul><h3>Quy tắc vàng:</h3><p><strong>DỪNG - NHÌN - NGHE - NGHĨ</strong> trước khi băng qua đường!</p>"
+      },
+      {
+        "type": "video",
+        "id": "kids_traffic_safety",
+        "youtubeId": "Zkt7hE64ECA",
+        "title": "An toàn giao thông cho trẻ em",
+        "description": "Hướng dẫn các quy tắc giao thông cơ bản",
+        "duration": 300
+      },
+      {
+        "type": "text",
+        "id": "traffic_rules",
+        "title": "Các quy tắc quan trọng",
+        "content": "<h3>Khi đi bộ:</h3><ul><li><strong>Đi trên vỉa hè</strong> - Không đi trên lòng đường</li><li><strong>Băng qua đường</strong> tại vạch kẻ hoặc cầu vượt</li><li><strong>Quan sát</strong> cả hai phía trước khi băng qua</li><li><strong>Giơ tay</strong> để báo hiệu khi băng qua</li></ul><h3>Khi đi xe đạp:</h3><ul><li><strong>Đội mũ bảo hiểm</strong> (nếu có)</li><li><strong>Đi đúng làn</strong> dành cho xe đạp</li><li><strong>Không đi song song</strong> với bạn bè</li><li><strong>Báo hiệu</strong> khi rẽ trái, rẽ phải</li></ul><h3>Khi đi xe máy (ngồi sau):</h3><ul><li><strong>Đội mũ bảo hiểm</strong> đúng cách</li><li><strong>Ngồi thẳng</strong>, không ngả người</li><li><strong>Ôm chặt</strong> người lái xe</li><li><strong>Không đưa tay chân</strong> ra ngoài</li></ul><h3>Ý nghĩa đèn giao thông:</h3><ul><li><strong>Đèn đỏ:</strong> DỪNG lại</li><li><strong>Đèn vàng:</strong> CHUẨN BỊ dừng</li><li><strong>Đèn xanh:</strong> ĐƯỢC ĐI (nhưng vẫn phải quan sát)</li></ul>"
+      }
+    ],
+    "quizQuestions": [
+      {
+        "id": "q1",
+        "question": "Quy tắc vàng trước khi băng qua đường là gì?",
+        "type": "single",
+        "options": [
+          "Chạy thật nhanh qua đường",
+          "DỪNG - NHÌN - NGHE - NGHĨ",
+          "Nhắm mắt và đi thẳng",
+          "Chỉ cần nhìn một phía"
+        ],
+        "correctAnswer": [1],
+        "category": "An toàn giao thông",
+        "explanation": "DỪNG - NHÌN - NGHE - NGHĨ là quy tắc vàng giúp quan sát kỹ tình huống trước khi băng qua đường.",
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": "q2",
+        "question": "Khi đèn giao thông chuyển sang màu vàng, em nên làm gì?",
+        "type": "single",
+        "options": [
+          "Chạy nhanh qua đường",
+          "Chuẩn bị dừng lại",
+          "Tiếp tục đi bình thường",
+          "Quay lại phía sau"
+        ],
+        "correctAnswer": [1],
+        "category": "An toàn giao thông",
+        "explanation": "Đèn vàng có nghĩa là chuẩn bị dừng lại, không nên cố gắng vượt qua.",
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": "q3",
+        "question": "Khi đi xe đạp trên đường, em cần chú ý những gì?",
+        "type": "multiple",
+        "options": [
+          "Đội mũ bảo hiểm",
+          "Đi đúng làn xe đạp",
+          "Không đi song song với bạn",
+          "Có thể vừa đi vừa chơi điện thoại",
+          "Báo hiệu khi rẽ"
+        ],
+        "correctAnswer": [0, 1, 2, 4],
+        "category": "An toàn giao thông",
+        "explanation": "Khi đi xe đạp cần đội mũ bảo hiểm, đi đúng làn, không song song, báo hiệu khi rẽ. Không được vừa đi vừa chơi điện thoại.",
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": "q4",
+        "question": "Trẻ em dưới 12 tuổi nên ngồi ở đâu trên xe ô tô?",
+        "type": "single",
+        "options": [
+          "Ghế phụ trước",
+          "Ghế sau và có ghế an toàn",
+          "Ôm trên tay người lớn",
+          "Đứng giữa hai ghế"
+        ],
+        "correctAnswer": [1],
+        "category": "An toàn giao thông",
+        "explanation": "Trẻ em dưới 12 tuổi nên ngồi ghế sau và sử dụng ghế an toàn phù hợp với độ tuổi để đảm bảo an toàn.",
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": "q5",
+        "question": "Những hành vi nào là nguy hiểm khi tham gia giao thông?",
+        "type": "multiple",
+        "options": [
+          "Chơi bóng trên đường",
+          "Băng qua đường tại vạch kẻ",
+          "Chạy ra đường đuổi theo bóng",
+          "Quan sát kỹ trước khi qua đường",
+          "Leo rào chắn đường"
+        ],
+        "correctAnswer": [0, 2, 4],
+        "category": "An toàn giao thông",
+        "explanation": "Chơi trên đường, chạy ra đường đuổi bóng và leo rào chắn đều rất nguy hiểm. Băng qua đường tại vạch kẻ và quan sát kỹ là đúng.",
+        "difficulty": "easy",
+        "points": 10
+      }
+    ]
+  },
+  {
+    "id": "healthy-eating",
+    "title": "Dinh dưỡng và ăn uống lành mạnh",
+    "description": "Kiến thức về dinh dưỡng cân bằng cho sức khỏe tốt",
+    "icon": "🥗",
+    "difficulty": "beginner",
+    "estimatedTime": 18,
+    "category": "Sức khỏe",
+    "ageGroup": "Mọi lứa tuổi",
+    "keywords": ["dinh dưỡng", "ăn uống", "sức khỏe", "vitamin", "khoáng chất"],
+    "learningContent": [
+      {
+        "type": "text",
+        "id": "nutrition_intro",
+        "title": "Tại sao dinh dưỡng quan trọng?",
+        "content": "<h2>Dinh dưỡng - Nền tảng của sức khỏe</h2><p>Dinh dưỡng tốt giúp cơ thể phát triển, duy trì sức khỏe và phòng chống bệnh tật.</p><h3>5 nhóm thực phẩm cần thiết:</h3><ul><li><strong>Tinh bột:</strong> Cơm, bánh mì, khoai - cung cấp năng lượng</li><li><strong>Protein:</strong> Thịt, cá, trứng, đậu - xây dựng cơ bắp</li><li><strong>Rau củ:</strong> Rau xanh, củ quả - vitamin và chất xơ</li><li><strong>Trái cây:</strong> Cam, táo, chuối - vitamin C và khoáng chất</li><li><strong>Sữa:</strong> Sữa, phô mai, sữa chua - canxi cho xương</li></ul><p><strong>Nguyên tắc:</strong> Ăn đa dạng, đủ chất, đúng lượng!</p>"
+      },
+      {
+        "type": "video",
+        "id": "healthy_eating_guide",
+        "youtubeId": "zln2PzZZ1z8",
+        "title": "Hướng dẫn ăn uống lành mạnh",
+        "description": "Cách xây dựng chế độ ăn cân bằng",
+        "duration": 420
+      }
+    ],
+    "quizQuestions": [
+      {
+        "id": "q1",
+        "question": "Có bao nhiêu nhóm thực phẩm cần thiết cho cơ thể?",
+        "type": "single",
+        "options": [
+          "3 nhóm",
+          "4 nhóm",
+          "5 nhóm",
+          "6 nhóm"
+        ],
+        "correctAnswer": [2],
+        "category": "Dinh dưỡng",
+        "explanation": "Có 5 nhóm thực phẩm cần thiết: tinh bột, protein, rau củ, trái cây và sữa.",
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": "q2",
+        "question": "Protein có vai trò gì trong cơ thể?",
+        "type": "single",
+        "options": [
+          "Cung cấp năng lượng chính",
+          "Xây dựng và sửa chữa cơ bắp",
+          "Cung cấp vitamin",
+          "Tạo ra chất béo"
+        ],
+        "correctAnswer": [1],
+        "category": "Dinh dưỡng",
+        "explanation": "Protein có vai trò chính là xây dựng, duy trì và sửa chữa các tế bào cơ bắp trong cơ thể.",
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": "q3",
+        "question": "Những thực phẩm nào thuộc nhóm tinh bột?",
+        "type": "multiple",
+        "options": [
+          "Cơm",
+          "Thịt gà",
+          "Bánh mì",
+          "Khoai lang",
+          "Cá"
+        ],
+        "correctAnswer": [0, 2, 3],
+        "category": "Dinh dưỡng",
+        "explanation": "Cơm, bánh mì và khoai lang đều thuộc nhóm tinh bột. Thịt gà và cá thuộc nhóm protein.",
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": "q4",
+        "question": "Canxi chủ yếu có trong nhóm thực phẩm nào?",
+        "type": "single",
+        "options": [
+          "Rau củ",
+          "Trái cây",
+          "Sữa và chế phẩm từ sữa",
+          "Thịt cá"
+        ],
+        "correctAnswer": [2],
+        "category": "Dinh dưỡng",
+        "explanation": "Canxi chủ yếu có trong sữa và các chế phẩm từ sữa như phô mai, sữa chua, giúp xương chắc khỏe.",
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": "q5",
+        "question": "Để có chế độ ăn lành mạnh, bạn nên?",
+        "type": "multiple",
+        "options": [
+          "Ăn đa dạng các nhóm thực phẩm",
+          "Chỉ ăn một loại thực phẩm yêu thích",
+          "Ăn đúng lượng phù hợp",
+          "Uống đủ nước mỗi ngày",
+          "Ăn thật nhiều để dự trữ"
+        ],
+        "correctAnswer": [0, 2, 3],
+        "category": "Dinh dưỡng",
+        "explanation": "Chế độ ăn lành mạnh cần ăn đa dạng, đúng lượng và uống đủ nước. Không nên ăn một loại hoặc ăn quá nhiều.",
+        "difficulty": "easy",
+        "points": 10
+      }
+    ]
+  },
+  {
+    "id": "environmental-protection",
+    "title": "Bảo vệ môi trường",
+    "description": "Cách bảo vệ môi trường trong cuộc sống hàng ngày",
+    "icon": "🌱",
+    "difficulty": "beginner",
+    "estimatedTime": 22,
+    "category": "Môi trường",
+    "ageGroup": "Từ 8 tuổi trở lên",
+    "keywords": ["môi trường", "tái chế", "tiết kiệm", "xanh", "sạch"],
+    "learningContent": [
+      {
+        "type": "text",
+        "id": "environment_intro",
+        "title": "Tại sao cần bảo vệ môi trường?",
+        "content": "<h2>Bảo vệ môi trường - Bảo vệ tương lai</h2><p>Môi trường sạch là điều kiện cần thiết cho sự sống. Mỗi hành động nhỏ của chúng ta đều có thể tạo ra sự khác biệt lớn.</p><h3>Các vấn đề môi trường hiện tại:</h3><ul><li><strong>Ô nhiễm không khí</strong> - Khói xe, khói nhà máy</li><li><strong>Ô nhiễm nước</strong> - Rác thải, hóa chất</li><li><strong>Rác thải nhựa</strong> - Túi nilon, chai lọ</li><li><strong>Phá rừng</strong> - Mất đi lá phổi xanh</li></ul><h3>Quy tắc 3R:</h3><ul><li><strong>Reduce (Giảm thiểu):</strong> Sử dụng ít hơn</li><li><strong>Reuse (Tái sử dụng):</strong> Dùng lại nhiều lần</li><li><strong>Recycle (Tái chế):</strong> Chế biến thành sản phẩm mới</li></ul>"
+      },
+      {
+        "type": "video",
+        "id": "environment_protection",
+        "youtubeId": "dJG3pU06lmM",
+        "title": "Cách bảo vệ môi trường đơn giản",
+        "description": "Những việc làm nhỏ để bảo vệ Trái Đất",
+        "duration": 360
+      }
+    ],
+    "quizQuestions": [
+      {
+        "id": "q1",
+        "question": "Quy tắc 3R trong bảo vệ môi trường là gì?",
+        "type": "multiple",
+        "options": [
+          "Reduce (Giảm thiểu)",
+          "Reuse (Tái sử dụng)", 
+          "Recycle (Tái chế)",
+          "Remove (Loại bỏ)",
+          "Replace (Thay thế)"
+        ],
+        "correctAnswer": [0, 1, 2],
+        "category": "Môi trường",
+        "explanation": "3R là Reduce (giảm thiểu), Reuse (tái sử dụng), Recycle (tái chế) - nguyên tắc cơ bản trong bảo vệ môi trường.",
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": "q2",
+        "question": "Việc nào sau đây KHÔNG tốt cho môi trường?",
+        "type": "single",
+        "options": [
+          "Sử dụng túi vải thay túi nilon",
+          "Tắt đèn khi không dùng",
+          "Vứt rác bừa bãi",
+          "Trồng cây xanh"
+        ],
+        "correctAnswer": [2],
+        "category": "Môi trường",
+        "explanation": "Vứt rác bừa bãi gây ô nhiễm môi trường. Các việc khác đều tốt cho môi trường.",
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": "q3",
+        "question": "Để tiết kiệm nước, bạn có thể làm gì?",
+        "type": "multiple",
+        "options": [
+          "Tắt vòi khi đánh răng",
+          "Tắm vòi hoa sen thay bồn tắm",
+          "Sửa chữa vòi bị rỉ nước",
+          "Để vòi chảy liên tục cả ngày",
+          "Tưới cây bằng nước đã qua sử dụng"
+        ],
+        "correctAnswer": [0, 1, 2, 4],
+        "category": "Môi trường",
+        "explanation": "Tắt vòi khi không dùng, tắm sen, sửa rỉ nước và tái sử dụng nước đều giúp tiết kiệm. Để vòi chảy liên tục là lãng phí.",
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": "q4",
+        "question": "Tại sao cần phân loại rác?",
+        "type": "single",
+        "options": [
+          "Để tốn thời gian",
+          "Để dễ tái chế và xử lý",
+          "Để làm đẹp nhà cửa",
+          "Không có lý do gì"
+        ],
+        "correctAnswer": [1],
+        "category": "Môi trường",
+        "explanation": "Phân loại rác giúp dễ dàng tái chế và xử lý, giảm ô nhiễm môi trường và tiết kiệm tài nguyên.",
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": "q5",
+        "question": "Những hành động nào giúp giảm ô nhiễm không khí?",
+        "type": "multiple",
+        "options": [
+          "Đi xe đạp thay xe máy",
+          "Trồng nhiều cây xanh",
+          "Đốt rác ngoài trời",
+          "Sử dụng phương tiện công cộng",
+          "Tắt động cơ xe khi dừng lâu"
+        ],
+        "correctAnswer": [0, 1, 3, 4],
+        "category": "Môi trường",
+        "explanation": "Đi xe đạp, trồng cây, dùng phương tiện công cộng và tắt máy khi dừng đều giảm ô nhiễm. Đốt rác gây ô nhiễm không khí.",
+        "difficulty": "medium",
+        "points": 15
+      }
+    ]
+  }
+] 

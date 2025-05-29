@@ -2,11 +2,16 @@
   "quizSettings": {
     "questionsPerQuiz": 5,
     "timePerQuestion": 30,
-    "tutePointsPerCorrectAnswer": 1
+    "tutePointsPerCorrectAnswer": 10
+  },
+  "learningSettings": {
+    "tutePointsPerLessonCompletion": 50,
+    "tutePointsPerVideoWatched": 5,
+    "minimumVideoWatchPercentage": 80
   },
   "appSettings": {
     "appName": "Freedom Training",
     "version": "1.0.0",
-    "supportEmail": "support@freedomtraining.edu.vn"
+    "supportEmail": "support@freedomtraining.com"
   }
 } 

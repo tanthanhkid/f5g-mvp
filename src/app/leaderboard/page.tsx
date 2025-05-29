@@ -16,7 +16,7 @@ export default function LeaderboardPage() {
 
   useEffect(() => {
     if (!user) {
-      router.push('/');
+      router.push('/login');
       return;
     }
 
