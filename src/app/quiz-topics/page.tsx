@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { BookOpen, Clock, Play, ArrowLeft, GraduationCap, Search, Filter, X } from 'lucide-react';
+import { BookOpen, Clock, Play, ArrowLeft, GraduationCap, Search, X } from 'lucide-react';
 import LoadingOverlay from '@/components/LoadingOverlay';
 import quizTopicsData from '../../../data/quiz-topics.json';
 
@@ -17,8 +17,8 @@ interface QuizTopic {
   category: string;
   ageGroup: string;
   keywords: string[];
-  learningContent: any[];
-  quizQuestions: any[];
+  learningContent: Record<string, unknown>[];
+  quizQuestions: Record<string, unknown>[];
 }
 
 export default function QuizTopicsPage() {
@@ -234,7 +234,7 @@ export default function QuizTopicsPage() {
             <div className="mt-4 text-sm text-gray-600">
               Tìm thấy <span className="font-semibold text-gray-900">{filteredTopics.length}</span> bài học
               {searchQuery && (
-                <span> cho từ khóa "<span className="font-semibold text-blue-600">{searchQuery}</span>"</span>
+                <span> cho từ khóa &quot;<span className="font-semibold text-blue-600">{searchQuery}</span>&quot;</span>
               )}
             </div>
           </div>
