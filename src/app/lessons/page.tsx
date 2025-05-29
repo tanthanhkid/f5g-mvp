@@ -85,10 +85,25 @@ export default function LessonsPage() {
               <span>Quay về Dashboard</span>
             </button>
             
-            <div className="flex items-center space-x-2">
-              <BookOpen className="w-6 h-6 text-blue-600" />
-              <h1 className="text-2xl font-bold text-gray-900">Bài học</h1>
-            </div>
+            <button 
+              onClick={() => router.push('/')}
+              className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+            >
+              <div className="w-10 h-10 rounded-lg overflow-hidden">
+                <img 
+                  src="/17164524823262_logo-web-con-voi.png" 
+                  alt="Freedom Training Logo" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <div className="flex items-center space-x-2">
+                <BookOpen className="w-6 h-6 text-blue-600" />
+                <div>
+                  <h1 className="text-xl font-bold text-gray-900">Freedom Training</h1>
+                  <p className="text-sm text-gray-600">Bài học</p>
+                </div>
+              </div>
+            </button>
 
             <div className="w-32"></div> {/* Spacer for centering */}
           </div>

@@ -48,7 +48,10 @@ export default function LoginPage() {
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-3">
+            <button 
+              onClick={() => router.push('/')}
+              className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+            >
               <div className="w-10 h-10 rounded-lg overflow-hidden">
                 <img 
                   src="/17164524823262_logo-web-con-voi.png" 
@@ -60,7 +63,7 @@ export default function LoginPage() {
                 <h1 className="text-2xl font-bold text-gray-900">Freedom Training</h1>
                 <p className="text-sm text-gray-600">Nền tảng học tập trực tuyến</p>
               </div>
-            </div>
+            </button>
           </div>
         </div>
       </div>

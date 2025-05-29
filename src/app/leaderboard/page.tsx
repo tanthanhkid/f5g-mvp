@@ -88,7 +88,10 @@ export default function LeaderboardPage() {
               <span>Quay lại Dashboard</span>
             </button>
             
-            <div className="flex items-center space-x-3">
+            <button 
+              onClick={() => router.push('/')}
+              className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+            >
               <div className="w-10 h-10 rounded-lg overflow-hidden">
                 <img 
                   src="/17164524823262_logo-web-con-voi.png" 
@@ -100,7 +103,7 @@ export default function LeaderboardPage() {
                 <h1 className="text-xl font-bold text-gray-900">Freedom Training</h1>
                 <p className="text-sm text-gray-600">Bảng xếp hạng</p>
               </div>
-            </div>
+            </button>
           </div>
         </div>
       </div>
