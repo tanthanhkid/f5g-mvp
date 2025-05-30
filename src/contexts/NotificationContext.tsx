@@ -39,10 +39,10 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
   return (
     <NotificationContext.Provider value={contextValue}>
       {children}
-      <NotificationSystem 
+      {/* <NotificationSystem 
         notifications={notifications} 
         onRemove={removeNotification} 
-      />
+      /> */}
     </NotificationContext.Provider>
   );
 };

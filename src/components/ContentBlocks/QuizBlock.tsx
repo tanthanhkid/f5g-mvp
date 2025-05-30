@@ -171,7 +171,7 @@ export default function QuizBlock({ block, onComplete, onNext, isActive = false,
               onChange={(e) => setTextAnswer(e.target.value)}
               disabled={isAnswered}
               placeholder="Nhập câu trả lời của bạn..."
-              className="w-full p-4 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none resize-none"
+              className="w-full p-4 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none resize-none text-gray-900 placeholder-gray-500"
               rows={4}
             />
           </div>

@@ -90,14 +90,14 @@ export default function Dashboard() {
       <LoadingOverlay isVisible={isLoading} message="Đang tải..." />
       <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <header className="bg-white shadow-sm border-b relative z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
+          <div className="flex justify-between items-center py-3 sm:py-4">
             <button 
               onClick={() => router.push('/')}
-              className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+              className="flex items-center space-x-2 sm:space-x-3 hover:opacity-80 transition-opacity"
             >
-              <div className="w-10 h-10 rounded-lg overflow-hidden">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg overflow-hidden">
                 <img 
                   src="/17164524823262_logo-web-con-voi.png" 
                   alt="Freedom Training Logo" 
@@ -105,27 +105,27 @@ export default function Dashboard() {
                 />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Freedom Training</h1>
-                <p className="text-sm text-gray-600">Nền tảng học tập trực tuyến</p>
+                <h1 className="text-lg sm:text-2xl font-bold text-gray-900">Freedom Training</h1>
+                <p className="text-xs sm:text-sm text-gray-600 hidden sm:block">Nền tảng học tập trực tuyến</p>
               </div>
             </button>
             
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <div className="text-right">
-                <p className="text-sm font-medium text-gray-900">{user.name}</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-900 truncate max-w-24 sm:max-w-none">{user.name}</p>
                 <p className="text-xs text-gray-600">{userSchool.shortName}</p>
               </div>
               <button
                 onClick={handleLogout}
-                className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-1.5 sm:p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                 title="Đăng xuất"
               >
-                <LogOut className="w-5 h-5" />
+                <LogOut className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}

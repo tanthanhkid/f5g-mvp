@@ -123,10 +123,10 @@ export default function LessonsPage() {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
               >
                 {categories.map(category => (
-                  <option key={category} value={category}>
+                  <option key={category} value={category} className="text-gray-900">
                     {category === 'all' ? 'Tất cả' : category}
                   </option>
                 ))}
@@ -141,10 +141,10 @@ export default function LessonsPage() {
               <select
                 value={selectedDifficulty}
                 onChange={(e) => setSelectedDifficulty(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
               >
                 {difficulties.map(difficulty => (
-                  <option key={difficulty} value={difficulty}>
+                  <option key={difficulty} value={difficulty} className="text-gray-900">
                     {difficulty === 'all' ? 'Tất cả' : getDifficultyText(difficulty)}
                   </option>
                 ))}

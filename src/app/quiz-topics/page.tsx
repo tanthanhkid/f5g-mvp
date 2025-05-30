@@ -183,7 +183,7 @@ export default function QuizTopicsPage() {
                     placeholder="Tìm kiếm bài học (ví dụ: an toàn, sơ cứu, giao thông...)"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
                   />
                 </div>
               </div>
@@ -194,10 +194,10 @@ export default function QuizTopicsPage() {
                   <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   >
                     {categories.map(category => (
-                      <option key={category} value={category}>
+                      <option key={category} value={category} className="text-gray-900">
                         {category === 'all' ? 'Tất cả chủ đề' : category}
                       </option>
                     ))}
@@ -208,10 +208,10 @@ export default function QuizTopicsPage() {
                   <select
                     value={selectedAgeGroup}
                     onChange={(e) => setSelectedAgeGroup(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   >
                     {ageGroups.map(ageGroup => (
-                      <option key={ageGroup} value={ageGroup}>
+                      <option key={ageGroup} value={ageGroup} className="text-gray-900">
                         {ageGroup === 'all' ? 'Tất cả lứa tuổi' : ageGroup}
                       </option>
                     ))}

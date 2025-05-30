@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { Star } from 'lucide-react';
 
 interface Investor {
@@ -52,11 +53,11 @@ const getTierColor = (tier: string) => {
 };
 
 const InvestorBubbles: React.FC<InvestorBubblesProps> = ({ investors, formatCurrency }) => {
+  const router = useRouter();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [bubbles, setBubbles] = useState<Bubble[]>([]);
   const [hoveredBubble, setHoveredBubble] = useState<Bubble | null>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isClient, setIsClient] = useState(false);
   const animationRef = useRef<number>(0);
   const currentBubblesRef = useRef<Bubble[]>([]);
@@ -257,7 +258,7 @@ const InvestorBubbles: React.FC<InvestorBubblesProps> = ({ investors, formatCurr
     };
   }, [bubbles.length, hoveredBubble, isClient]);
 
-  // Handle mouse events - sử dụng currentBubblesRef
+  // Handle mouse events
   const handleMouseMove = useCallback((event: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -266,9 +267,7 @@ const InvestorBubbles: React.FC<InvestorBubblesProps> = ({ investors, formatCurr
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    setMousePos({ x: event.clientX, y: event.clientY });
-
-    // Check hover - sử dụng currentBubblesRef
+    // Check hover
     const hoveredBubble = currentBubblesRef.current.find(bubble => {
       const dx = x - bubble.x;
       const dy = y - bubble.y;
@@ -277,11 +276,41 @@ const InvestorBubbles: React.FC<InvestorBubblesProps> = ({ investors, formatCurr
     });
 
     setHoveredBubble(hoveredBubble || null);
+    
+    // Change cursor style
+    if (canvas) {
+      canvas.style.cursor = hoveredBubble ? 'pointer' : 'default';
+    }
   }, []);
 
   const handleMouseLeave = useCallback(() => {
     setHoveredBubble(null);
+    if (canvasRef.current) {
+      canvasRef.current.style.cursor = 'default';
+    }
   }, []);
+
+  // Handle click event
+  const handleClick = useCallback((event: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    // Find clicked bubble
+    const clickedBubble = currentBubblesRef.current.find(bubble => {
+      const dx = x - bubble.x;
+      const dy = y - bubble.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      return distance <= bubble.radius;
+    });
+
+    if (clickedBubble) {
+      router.push(`/investors/${clickedBubble.investor.id}`);
+    }
+  }, [router]);
 
   return (
     <div className="w-full bg-gray-900 rounded-2xl p-6 overflow-hidden">
@@ -290,7 +319,7 @@ const InvestorBubbles: React.FC<InvestorBubblesProps> = ({ investors, formatCurr
           🫧 Bong Bóng Nhà Tài Trợ
         </h3>
         <p className="text-gray-300 text-sm mb-4">
-          Kích thước bong bóng tương ứng với tỉ lệ đóng góp. Hover để xem chi tiết.
+          Kích thước bong bóng tương ứng với tỉ lệ đóng góp. Click để xem chi tiết.
         </p>
         
         {/* Legend */}
@@ -321,41 +350,11 @@ const InvestorBubbles: React.FC<InvestorBubblesProps> = ({ investors, formatCurr
       >
         <canvas
           ref={canvasRef}
-          className="w-full h-full cursor-pointer"
+          className="w-full h-full"
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
+          onClick={handleClick}
         />
-
-        {/* Tooltip */}
-        {hoveredBubble && (
-          <div 
-            className="absolute bg-gray-900 text-white p-4 rounded-lg shadow-lg border border-gray-700 min-w-[250px] z-10 pointer-events-none"
-            style={{
-              left: mousePos.x - 125,
-              top: mousePos.y - 120,
-            }}
-          >
-            <div className="flex items-center mb-2">
-              <div 
-                className="w-4 h-4 rounded-full mr-2"
-                style={{ backgroundColor: getTierColor(hoveredBubble.investor.tier) }}
-              ></div>
-              <div className="font-bold text-lg">{hoveredBubble.investor.name}</div>
-            </div>
-            <div className="text-sm text-gray-300 mb-1">
-              Tier: <span className="capitalize text-yellow-400">{hoveredBubble.investor.tier}</span>
-            </div>
-            <div className="text-sm text-gray-300 mb-1">
-              Đóng góp: <span className="text-green-400">{formatCurrency(hoveredBubble.investor.dailyContribution)}/ngày</span>
-            </div>
-            <div className="text-sm text-gray-300 mb-1">
-              Tỉ lệ: <span className="text-blue-400">{hoveredBubble.investor.percentage}% tổng pool</span>
-            </div>
-            <div className="text-xs text-gray-400 mt-2">
-              Kích thước bong bóng: {Math.round(hoveredBubble.radius)}px
-            </div>
-          </div>
-        )}
       </div>
  
     </div>

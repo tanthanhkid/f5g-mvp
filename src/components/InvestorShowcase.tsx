@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { Search, Star, TrendingUp, Building2, ChevronLeft, ChevronRight } from 'lucide-react';
 import WaterTank from './WaterTank';
+import { useRouter } from 'next/navigation';
 
 interface Investor {
   id: number;
@@ -58,9 +59,10 @@ const TopInvestorBubbles: React.FC<{
   topInvestors: Investor[]; 
   formatCurrency: (amount: number) => string;
 }> = ({ topInvestors, formatCurrency }) => {
+  const router = useRouter();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [hoveredInvestor, setHoveredInvestor] = useState<Investor | null>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -114,146 +116,120 @@ const TopInvestorBubbles: React.FC<{
     });
 
     // Draw bubbles
-    bubbles.forEach(({ investor, x, y, radius }) => {
-      const isHovered = hoveredInvestor?.id === investor.id;
-      const currentRadius = radius * (isHovered ? 1.1 : 1);
+    bubbles.forEach((bubble) => {
+      const isHovered = hoveredInvestor?.id === bubble.investor.id;
+      const scale = isHovered ? 1.1 : 1;
+      const currentRadius = bubble.radius * scale;
 
-      // Shadow
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
-      ctx.shadowBlur = 15;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 8;
-
-      // Gradient background
+      // Create gradient
       const gradient = ctx.createRadialGradient(
-        x - currentRadius * 0.3, y - currentRadius * 0.3, 0,
-        x, y, currentRadius
+        bubble.x, bubble.y, 0,
+        bubble.x, bubble.y, currentRadius
       );
-      gradient.addColorStop(0, getTierColor(investor.tier) + '20');
-      gradient.addColorStop(0.7, getTierColor(investor.tier) + 'AA');
-      gradient.addColorStop(1, getTierColor(investor.tier));
+      gradient.addColorStop(0, getTierColor(bubble.investor.tier) + '40');
+      gradient.addColorStop(0.7, getTierColor(bubble.investor.tier) + '80');
+      gradient.addColorStop(1, getTierColor(bubble.investor.tier));
 
       // Draw bubble
       ctx.beginPath();
-      ctx.arc(x, y, currentRadius, 0, Math.PI * 2);
+      ctx.arc(bubble.x, bubble.y, currentRadius, 0, Math.PI * 2);
       ctx.fillStyle = gradient;
       ctx.fill();
 
-      // Reset shadow
-      ctx.shadowColor = 'transparent';
-      ctx.shadowBlur = 0;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 0;
-
       // Border
-      ctx.strokeStyle = isHovered ? '#ffffff' : getTierColor(investor.tier);
+      ctx.strokeStyle = getTierColor(bubble.investor.tier);
       ctx.lineWidth = isHovered ? 4 : 2;
       ctx.stroke();
 
-      // Company initials
+      // Glow effect when hovered
+      if (isHovered) {
+        ctx.shadowColor = getTierColor(bubble.investor.tier);
+        ctx.shadowBlur = 20;
+        ctx.beginPath();
+        ctx.arc(bubble.x, bubble.y, currentRadius, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
+
+      // Company text
       ctx.fillStyle = 'white';
-      ctx.font = `bold ${Math.max(currentRadius * 0.25, 16)}px Inter, Arial, sans-serif`;
+      ctx.font = `bold ${Math.max(currentRadius * 0.2, 12)}px Arial`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(getInitials(investor), x, y - currentRadius * 0.15);
+      ctx.fillText(
+        bubble.investor.shortName || bubble.investor.name.split(' ')[0],
+        bubble.x,
+        bubble.y - 10
+      );
 
       // Percentage
       ctx.fillStyle = '#fbbf24';
-      ctx.font = `bold ${Math.max(currentRadius * 0.18, 14)}px Inter, Arial, sans-serif`;
-      ctx.fillText(`${investor.percentage}%`, x, y + currentRadius * 0.15);
-
-      // Tier indicator
-      if (investor.tier === 'platinum') {
-        ctx.fillStyle = '#fbbf24';
-        ctx.font = `${Math.max(currentRadius * 0.12, 10)}px Inter, Arial, sans-serif`;
-        ctx.fillText('★ PLATINUM', x, y + currentRadius * 0.35);
-      }
+      ctx.font = `bold ${Math.max(currentRadius * 0.15, 10)}px Arial`;
+      ctx.fillText(
+        `${bubble.investor.percentage}%`,
+        bubble.x,
+        bubble.y + 15
+      );
     });
 
-    // Mouse interaction
     const handleMouseMove = (event: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
-      const mouseX = event.clientX - rect.left;
-      const mouseY = event.clientY - rect.top;
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
 
-      setMousePos({ x: event.clientX, y: event.clientY });
-
-      const hoveredBubble = bubbles.find(({ x, y, radius }) => {
-        const distance = Math.sqrt((mouseX - x) ** 2 + (mouseY - y) ** 2);
-        return distance <= radius;
+      const hoveredBubble = bubbles.find(bubble => {
+        const dx = x - bubble.x;
+        const dy = y - bubble.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        return distance <= bubble.radius;
       });
 
       setHoveredInvestor(hoveredBubble?.investor || null);
+      
+      // Change cursor style
+      canvas.style.cursor = hoveredBubble ? 'pointer' : 'default';
     };
 
     const handleMouseLeave = () => {
       setHoveredInvestor(null);
+      canvas.style.cursor = 'default';
+    };
+
+    const handleClick = (event: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      const clickedBubble = bubbles.find(bubble => {
+        const dx = x - bubble.x;
+        const dy = y - bubble.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        return distance <= bubble.radius;
+      });
+
+      if (clickedBubble) {
+        router.push(`/investors/${clickedBubble.investor.id}`);
+      }
     };
 
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('mouseleave', handleMouseLeave);
+    canvas.addEventListener('click', handleClick);
 
     return () => {
       canvas.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('mouseleave', handleMouseLeave);
+      canvas.removeEventListener('click', handleClick);
     };
-  }, [topInvestors, hoveredInvestor, formatCurrency]);
+  }, [topInvestors, hoveredInvestor, formatCurrency, router]);
 
   return (
-    <div className="relative">
+    <div ref={containerRef} className="relative">
       <canvas
         ref={canvasRef}
-        className="w-full h-[600px] cursor-pointer"
+        className="w-full h-[600px]"
         style={{ display: 'block' }}
       />
-      
-      {/* Tooltip */}
-      {hoveredInvestor && (
-        <div 
-          className="fixed bg-white text-gray-900 p-4 rounded-xl shadow-2xl border border-gray-200 min-w-[320px] z-50 pointer-events-none"
-          style={{
-            left: mousePos.x - 160,
-            top: mousePos.y - 140,
-          }}
-        >
-          <div className="flex items-center mb-3">
-            <div 
-              className="w-5 h-5 rounded-full mr-3"
-              style={{ backgroundColor: getTierColor(hoveredInvestor.tier) }}
-            ></div>
-            <div>
-              <div className="font-bold text-lg">{hoveredInvestor.shortName || hoveredInvestor.name}</div>
-              {hoveredInvestor.stockCode && (
-                <div className="text-sm text-gray-500">Mã CK: {hoveredInvestor.stockCode}</div>
-              )}
-            </div>
-          </div>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-gray-600">Tên đầy đủ:</span>
-              <span className="font-medium text-right max-w-[180px] break-words">{hoveredInvestor.name}</span>
-            </div>
-            {hoveredInvestor.sector && (
-              <div className="flex justify-between">
-                <span className="text-gray-600">Ngành:</span>
-                <span className="font-medium text-blue-600">{hoveredInvestor.sector}</span>
-              </div>
-            )}
-            <div className="flex justify-between">
-              <span className="text-gray-600">Tier:</span>
-              <span className="font-semibold capitalize text-yellow-600">{hoveredInvestor.tier}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Đóng góp hàng ngày:</span>
-              <span className="font-semibold text-green-600">{formatCurrency(hoveredInvestor.dailyContribution)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Tỉ lệ tổng pool:</span>
-              <span className="font-semibold text-blue-600">{hoveredInvestor.percentage}%</span>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
@@ -263,9 +239,23 @@ const InvestorList: React.FC<{
   investors: Investor[];
   formatCurrency: (amount: number) => string;
 }> = ({ investors, formatCurrency }) => {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  
+  // Responsive items per page
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  // Update items per page based on screen size
+  useEffect(() => {
+    const updateItemsPerPage = () => {
+      setItemsPerPage(window.innerWidth < 640 ? 5 : 10);
+    };
+
+    updateItemsPerPage();
+    window.addEventListener('resize', updateItemsPerPage);
+    return () => window.removeEventListener('resize', updateItemsPerPage);
+  }, []);
 
   const filteredInvestors = useMemo(() => {
     return investors.filter(investor =>
@@ -273,10 +263,10 @@ const InvestorList: React.FC<{
     );
   }, [investors, searchTerm]);
 
-  // Reset về trang 1 khi search
+  // Reset về trang 1 khi search hoặc thay đổi itemsPerPage
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm]);
+  }, [searchTerm, itemsPerPage]);
 
   // Tính toán phân trang
   const totalPages = Math.ceil(filteredInvestors.length / itemsPerPage);
@@ -301,30 +291,38 @@ const InvestorList: React.FC<{
   };
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-lg">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-2xl font-bold text-gray-900 flex items-center">
-          <Building2 className="w-6 h-6 mr-2 text-blue-600" />
-          Các Nhà Tài Trợ Khác
-          <span className="ml-2 text-sm font-normal text-gray-500">
-            ({filteredInvestors.length} Nhà Tài Trợ)
-          </span>
-        </h3>
+    <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg">
+      {/* Header - Mobile First Design */}
+      <div className="mb-4 sm:mb-6">
+        {/* Title Section */}
+        <div className="flex items-center mb-4">
+          <Building2 className="w-5 h-5 sm:w-6 sm:h-6 mr-2 text-blue-600 flex-shrink-0" />
+          <div>
+            <h3 className="text-lg sm:text-2xl font-bold text-gray-900 leading-tight">
+              Các Nhà Tài Trợ Khác
+            </h3>
+            <p className="text-xs sm:text-sm font-normal text-gray-500 mt-0.5">
+              ({filteredInvestors.length} Nhà Tài Trợ) - Click để xem chi tiết
+            </p>
+          </div>
+        </div>
+        
+        {/* Search Box */}
         <div className="relative">
-          <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Search className="w-4 h-4 sm:w-5 sm:h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           <input
             type="text"
             placeholder="Tìm kiếm Nhà Tài Trợ..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none w-64 text-black"
+            className="w-full pl-9 sm:pl-10 pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm sm:text-base text-gray-900 placeholder-gray-500"
           />
         </div>
       </div>
 
       {/* Hiển thị thông tin phân trang */}
       {filteredInvestors.length > 0 && (
-        <div className="flex justify-between items-center mb-4 text-sm text-gray-600">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 text-xs sm:text-sm text-gray-600 space-y-1 sm:space-y-0">
           <div>
             Hiển thị {startIndex + 1}-{Math.min(endIndex, filteredInvestors.length)} trong tổng số {filteredInvestors.length} Nhà Tài Trợ
           </div>
@@ -334,36 +332,90 @@ const InvestorList: React.FC<{
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 min-h-[400px]">
+      {/* Investor Cards - Responsive Grid */}
+      <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-4 lg:gap-6">
         {currentInvestors.map((investor) => (
           <div
             key={investor.id}
-            className="bg-gray-50 rounded-xl p-4 hover:bg-gray-100 transition-colors border border-gray-200"
+            className="bg-gray-50 rounded-xl p-3 sm:p-4 hover:bg-gray-100 transition-colors border border-gray-200 sm:h-full cursor-pointer hover:shadow-md"
+            onClick={() => router.push(`/investors/${investor.id}`)}
           >
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-xs mr-3"
-                  style={{ backgroundColor: getTierColor(investor.tier) }}
-                >
-                  {getInitials(investor)}
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 text-sm">{investor.shortName || investor.name}</h4>
-                  <div className="flex items-center space-x-2 text-xs text-gray-500">
-                    {investor.stockCode && <span>({investor.stockCode})</span>}
-                    {investor.sector && <span>• {investor.sector}</span>}
+            {/* Mobile Layout - Horizontal */}
+            <div className="sm:hidden">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center flex-1 min-w-0">
+                  <div
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs mr-3 flex-shrink-0"
+                    style={{ backgroundColor: getTierColor(investor.tier) }}
+                  >
+                    {getInitials(investor)}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h4 className="font-semibold text-gray-900 text-sm truncate">{investor.shortName || investor.name}</h4>
+                    <div className="flex items-center space-x-1 text-xs text-gray-500">
+                      {investor.stockCode && <span>({investor.stockCode})</span>}
+                    </div>
                   </div>
                 </div>
+                <div className="text-right flex-shrink-0 ml-3">
+                  <div className="text-base font-bold text-blue-600">{investor.percentage}%</div>
+                </div>
               </div>
-              <div className="text-right">
-                <div className="text-lg font-bold text-blue-600">{investor.percentage}%</div>
+              <div className="text-xs text-gray-600">
+                <div className="flex justify-between items-center">
+                  <span>Đóng góp/ngày:</span>
+                  <span className="font-semibold text-xs">{formatCurrency(investor.dailyContribution)}</span>
+                </div>
               </div>
             </div>
-            <div className="text-xs text-gray-600">
-              <div className="flex justify-between mb-1">
-                <span>Đóng góp/ngày:</span>
-                <span className="font-semibold">{formatCurrency(investor.dailyContribution)}</span>
+
+            {/* Desktop Layout - Vertical Card */}
+            <div className="hidden sm:block h-full">
+              <div className="flex flex-col h-full">
+                {/* Header */}
+                <div className="flex items-center mb-3">
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-xs mr-3 flex-shrink-0"
+                    style={{ backgroundColor: getTierColor(investor.tier) }}
+                  >
+                    {getInitials(investor)}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-lg font-bold text-blue-600 mb-1">{investor.percentage}%</div>
+                  </div>
+                </div>
+
+                {/* Company Info */}
+                <div className="flex-1">
+                  <h4 className="font-semibold text-gray-900 text-sm mb-2 line-clamp-2 leading-tight">
+                    {investor.shortName || investor.name}
+                  </h4>
+                  
+                  <div className="space-y-1 text-xs text-gray-500 mb-3">
+                    {investor.stockCode && (
+                      <div className="flex items-center">
+                        <span className="bg-gray-200 text-gray-700 px-2 py-0.5 rounded text-xs font-mono">
+                          {investor.stockCode}
+                        </span>
+                      </div>
+                    )}
+                    {investor.sector && (
+                      <div className="text-gray-600 truncate">{investor.sector}</div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Footer */}
+                <div className="mt-auto pt-3 border-t border-gray-200">
+                  <div className="text-xs text-gray-600">
+                    <div className="text-center">
+                      <span className="text-gray-500 block mb-1">Đóng góp/ngày</span>
+                      <span className="font-semibold text-green-600 text-sm">
+                        {formatCurrency(investor.dailyContribution)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -371,12 +423,12 @@ const InvestorList: React.FC<{
       </div>
 
       {/* Phân trang */}
-      {totalPages > 1 && (
-        <div className="flex justify-center items-center mt-6 space-x-2">
+      {filteredInvestors.length > itemsPerPage && (
+        <div className="flex flex-col sm:flex-row justify-center items-center mt-4 sm:mt-6 space-y-3 sm:space-y-0 sm:space-x-2">
           <button
             onClick={handlePrevPage}
             disabled={currentPage === 1}
-            className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors w-full sm:w-auto justify-center ${
               currentPage === 1
                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
@@ -386,46 +438,40 @@ const InvestorList: React.FC<{
             Trước
           </button>
 
-          {/* Hiển thị số trang */}
-          <div className="flex space-x-1">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-              // Hiển thị trang đầu, cuối và các trang xung quanh trang hiện tại
-              if (
-                page === 1 ||
-                page === totalPages ||
-                (page >= currentPage - 1 && page <= currentPage + 1)
-              ) {
-                return (
-                  <button
-                    key={page}
-                    onClick={() => handlePageChange(page)}
-                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      currentPage === page
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                    }`}
-                  >
-                    {page}
-                  </button>
-                );
-              } else if (
-                (page === currentPage - 2 && currentPage > 3) ||
-                (page === currentPage + 2 && currentPage < totalPages - 2)
-              ) {
-                return (
-                  <span key={page} className="px-2 py-2 text-gray-400">
-                    ...
-                  </span>
-                );
+          {/* Hiển thị số trang - Mobile optimized */}
+          <div className="flex items-center space-x-1 overflow-x-auto px-2 max-w-full">
+            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+              let pageNumber;
+              if (totalPages <= 5) {
+                pageNumber = i + 1;
+              } else if (currentPage <= 3) {
+                pageNumber = i + 1;
+              } else if (currentPage >= totalPages - 2) {
+                pageNumber = totalPages - 4 + i;
+              } else {
+                pageNumber = currentPage - 2 + i;
               }
-              return null;
+
+              return (
+                <button
+                  key={pageNumber}
+                  onClick={() => handlePageChange(pageNumber)}
+                  className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors flex-shrink-0 ${
+                    currentPage === pageNumber
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                  }`}
+                >
+                  {pageNumber}
+                </button>
+              );
             })}
           </div>
 
           <button
             onClick={handleNextPage}
             disabled={currentPage === totalPages}
-            className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors w-full sm:w-auto justify-center ${
               currentPage === totalPages
                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
@@ -437,12 +483,181 @@ const InvestorList: React.FC<{
         </div>
       )}
 
+      {/* Không có kết quả */}
       {filteredInvestors.length === 0 && (
         <div className="text-center py-8 text-gray-500">
-          <Search className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-          <p>Không tìm thấy Nhà Tài Trợ nào phù hợp</p>
+          <p className="text-lg mb-2">Không tìm thấy nhà tài trợ nào</p>
+          <p className="text-sm">Thử thay đổi từ khóa tìm kiếm</p>
         </div>
       )}
+    </div>
+  );
+};
+
+// Component leaderboard cho mobile (game-style)
+const TopInvestorLeaderboard: React.FC<{ 
+  topInvestors: Investor[]; 
+  formatCurrency: (amount: number) => string;
+}> = ({ topInvestors, formatCurrency }) => {
+  const getRankStyle = (rank: number) => {
+    switch (rank) {
+      case 1:
+        return {
+          bg: 'bg-gradient-to-r from-yellow-400 to-yellow-600',
+          border: 'border-yellow-300',
+          text: 'text-yellow-900',
+          crown: '👑'
+        };
+      case 2:
+        return {
+          bg: 'bg-gradient-to-r from-gray-300 to-gray-500',
+          border: 'border-gray-300',
+          text: 'text-gray-900',
+          crown: '🥈'
+        };
+      case 3:
+        return {
+          bg: 'bg-gradient-to-r from-orange-400 to-orange-600',
+          border: 'border-orange-300',
+          text: 'text-orange-900',
+          crown: '🥉'
+        };
+      default:
+        return {
+          bg: 'bg-gradient-to-r from-blue-500 to-blue-600',
+          border: 'border-blue-300',
+          text: 'text-blue-900',
+          crown: ''
+        };
+    }
+  };
+
+  const getTierBadge = (tier: string) => {
+    switch (tier) {
+      case 'platinum': return { label: 'PLATINUM', color: 'bg-purple-500', icon: '💎' };
+      case 'gold': return { label: 'GOLD', color: 'bg-yellow-500', icon: '🏆' };
+      case 'silver': return { label: 'SILVER', color: 'bg-blue-500', icon: '🥈' };
+      case 'bronze': return { label: 'BRONZE', color: 'bg-green-500', icon: '🥉' };
+      default: return { label: 'MEMBER', color: 'bg-gray-500', icon: '⭐' };
+    }
+  };
+
+  return (
+    <div className="space-y-3">
+      {topInvestors.map((investor, index) => {
+        const rank = index + 1;
+        const rankStyle = getRankStyle(rank);
+        const tierBadge = getTierBadge(investor.tier);
+        const isTopThree = rank <= 3;
+        
+        return (
+          <div
+            key={investor.id}
+            className={`relative bg-white rounded-xl shadow-lg border-2 ${rankStyle.border} overflow-hidden transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl`}
+            style={{
+              animationDelay: `${index * 100}ms`,
+              animation: 'slideInRight 0.6s ease-out forwards'
+            }}
+          >
+            {/* Top 3 Special Background */}
+            {isTopThree && (
+              <div className={`absolute inset-0 ${rankStyle.bg} opacity-10`}></div>
+            )}
+            
+            <div className="relative p-4">
+              <div className="flex items-center space-x-4">
+                {/* Rank Number */}
+                <div className={`flex-shrink-0 w-12 h-12 ${rankStyle.bg} rounded-full flex items-center justify-center shadow-lg`}>
+                  <span className={`text-xl font-bold ${rankStyle.text}`}>
+                    {rank <= 3 ? rankStyle.crown : rank}
+                  </span>
+                </div>
+                
+                {/* Company Logo/Avatar */}
+                <div className="relative flex-shrink-0">
+                  <div 
+                    className="w-14 h-14 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg border-3 border-white"
+                    style={{ backgroundColor: getTierColor(investor.tier) }}
+                  >
+                    {investor.logo ? (
+                      <img 
+                        src={investor.logo} 
+                        alt={investor.name}
+                        className="w-full h-full rounded-full object-contain bg-white p-1"
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          target.style.display = 'none';
+                          const nextSibling = target.nextElementSibling as HTMLElement;
+                          if (nextSibling) {
+                            nextSibling.style.display = 'block';
+                          }
+                        }}
+                      />
+                    ) : null}
+                    <span className={investor.logo ? "hidden" : "block"}>
+                      {getInitials(investor)}
+                    </span>
+                  </div>
+                  
+                  {/* Tier Badge */}
+                  <div className={`absolute -bottom-1 -right-1 ${tierBadge.color} rounded-full px-2 py-0.5 text-xs font-bold text-white shadow-lg flex items-center`}>
+                    <span className="mr-1">{tierBadge.icon}</span>
+                    <span className="hidden sm:inline">{tierBadge.label}</span>
+                  </div>
+                </div>
+                
+                {/* Company Info */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <h4 className="font-bold text-gray-900 text-base sm:text-lg truncate">
+                      {investor.shortName || investor.name}
+                    </h4>
+                    {investor.stockCode && (
+                      <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-md text-xs font-mono">
+                        {investor.stockCode}
+                      </span>
+                    )}
+                  </div>
+                  
+                  {investor.sector && (
+                    <p className="text-sm text-gray-600 truncate">{investor.sector}</p>
+                  )}
+                  
+                  <div className="flex items-center space-x-4 mt-2">
+                    <div className="flex items-center">
+                      <span className="text-xs text-gray-500 mr-1">Đóng góp:</span>
+                      <span className="font-semibold text-green-600 text-sm">
+                        {formatCurrency(investor.dailyContribution)}/ngày
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Percentage Score */}
+                <div className="flex-shrink-0 text-right">
+                  <div className={`text-2xl font-bold ${isTopThree ? rankStyle.text : 'text-blue-600'} mb-1`}>
+                    {investor.percentage}%
+                  </div>
+                  <div className="text-xs text-gray-500">của pool</div>
+                </div>
+              </div>
+              
+              {/* Progress Bar */}
+              <div className="mt-4">
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className={`h-2 rounded-full ${isTopThree ? rankStyle.bg : 'bg-gradient-to-r from-blue-500 to-blue-600'} transition-all duration-1000 ease-out`}
+                    style={{ 
+                      width: `${Math.min(investor.percentage * 4, 100)}%`,
+                      animationDelay: `${index * 200 + 600}ms`
+                    }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 };
@@ -479,19 +694,20 @@ const InvestorShowcase: React.FC<InvestorShowcaseProps> = ({ investorData, forma
         />
       </div>
 
-      {/* Top 10 Investors Bubbles */}
-      <div className="bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 rounded-2xl p-8 overflow-hidden">
-        <div className="mb-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-3 flex items-center justify-center">
-            <TrendingUp className="w-8 h-8 mr-3 text-yellow-400" />
+      {/* Top 10 Investors - Responsive Display */}
+      <div className="bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 rounded-2xl p-4 sm:p-8 overflow-hidden">
+        <div className="mb-6 sm:mb-8 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 flex items-center justify-center">
+            <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 mr-3 text-yellow-400" />
             Top 10 Nhà Tài Trợ Hàng Đầu
           </h2>
-          <p className="text-gray-300 text-lg">
-            Kích thước bong bóng tương ứng với tỉ lệ đóng góp vào quỹ tài trợ
+          <p className="text-gray-300 text-sm sm:text-lg">
+            <span className="hidden sm:inline">Kích thước bong bóng tương ứng với tỉ lệ đóng góp vào quỹ tài trợ</span>
+            <span className="sm:hidden">Bảng xếp hạng các nhà tài trợ hàng đầu</span>
           </p>
           
-          {/* Legend */}
-          <div className="flex flex-wrap justify-center gap-6 mt-6 text-sm">
+          {/* Legend - Only show on desktop */}
+          <div className="hidden sm:flex flex-wrap justify-center gap-6 mt-6 text-sm">
             <div className="flex items-center">
               <div className="w-4 h-4 bg-purple-500 rounded-full mr-2"></div>
               <span className="text-gray-300">Platinum (25%+)</span>
@@ -511,8 +727,15 @@ const InvestorShowcase: React.FC<InvestorShowcaseProps> = ({ investorData, forma
           </div>
         </div>
 
-        <TopInvestorBubbles topInvestors={topInvestors} formatCurrency={formatCurrency} />
-         
+        {/* Desktop: Bubble Chart */}
+        <div className="hidden sm:block">
+          <TopInvestorBubbles topInvestors={topInvestors} formatCurrency={formatCurrency} />
+        </div>
+
+        {/* Mobile: Leaderboard */}
+        <div className="block sm:hidden">
+          <TopInvestorLeaderboard topInvestors={topInvestors} formatCurrency={formatCurrency} />
+        </div>
       </div>
 
       {/* Other Investors List */}

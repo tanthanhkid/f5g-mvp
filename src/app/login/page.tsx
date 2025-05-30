@@ -45,14 +45,14 @@ export default function LoginPage() {
       <LoadingOverlay isVisible={isLoading} message="Đang đăng nhập..." />
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <header className="bg-white shadow-sm border-b relative z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
+          <div className="flex justify-between items-center py-3 sm:py-4">
             <button 
               onClick={() => router.push('/')}
-              className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+              className="flex items-center space-x-2 sm:space-x-3 hover:opacity-80 transition-opacity"
             >
-              <div className="w-10 h-10 rounded-lg overflow-hidden">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg overflow-hidden">
                 <img 
                   src="/17164524823262_logo-web-con-voi.png" 
                   alt="Freedom Training Logo" 
@@ -60,13 +60,13 @@ export default function LoginPage() {
                 />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Freedom Training</h1>
-                <p className="text-sm text-gray-600">Nền tảng học tập trực tuyến</p>
+                <h1 className="text-lg sm:text-2xl font-bold text-gray-900">Freedom Training</h1>
+                <p className="text-xs sm:text-sm text-gray-600 hidden sm:block">Nền tảng học tập trực tuyến</p>
               </div>
             </button>
           </div>
         </div>
-      </div>
+      </header>
 
       <div className="flex min-h-[calc(100vh-80px)]">
         {/* Left side - Features */}
@@ -106,15 +106,15 @@ export default function LoginPage() {
         </div>
 
         {/* Right side - Login form */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8">
           <div className="max-w-md w-full">
-            <div className="bg-white rounded-2xl shadow-xl p-8">
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">Đăng nhập</h2>
-                <p className="text-gray-600">Chào mừng bạn quay trở lại!</p>
+            <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
+              <div className="text-center mb-6 sm:mb-8">
+                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Đăng nhập</h2>
+                <p className="text-sm sm:text-base text-gray-600">Chào mừng bạn quay trở lại!</p>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                     Email
@@ -124,7 +124,7 @@ export default function LoginPage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-900"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-900 text-sm sm:text-base"
                     placeholder="Nhập email của bạn"
                     required
                   />
@@ -140,16 +140,16 @@ export default function LoginPage() {
                       type={showPassword ? 'text' : 'password'}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors pr-12 text-gray-900"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors pr-10 sm:pr-12 text-gray-900 text-sm sm:text-base"
                       placeholder="Nhập mật khẩu"
                       required
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 p-1"
                     >
-                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      {showPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
                     </button>
                   </div>
                 </div>
@@ -163,19 +163,19 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-indigo-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-2.5 sm:py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-indigo-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                 >
                   {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
                 </button>
               </form>
 
-              <div className="mt-8 pt-6 border-t border-gray-200">
+              <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-gray-200">
                 <div className="text-center">
-                  <p className="text-sm text-gray-700 mb-4 font-medium">Tài khoản demo:</p>
-                  <div className="grid grid-cols-1 gap-2 text-sm text-gray-800 font-mono">
-                    <div className="bg-gray-50 p-2 rounded">student1@hust.edu.vn / 123456</div>
-                    <div className="bg-gray-50 p-2 rounded">student1@bku.edu.vn / 123456</div>
-                    <div className="bg-gray-50 p-2 rounded">student1@vnu.edu.vn / 123456</div>
+                  <p className="text-xs sm:text-sm text-gray-700 mb-3 sm:mb-4 font-medium">Tài khoản demo:</p>
+                  <div className="grid grid-cols-1 gap-2 text-xs sm:text-sm text-gray-800 font-mono">
+                    <div className="bg-gray-50 p-2 rounded text-xs sm:text-sm">student1@hust.edu.vn / 123456</div>
+                    <div className="bg-gray-50 p-2 rounded text-xs sm:text-sm">student1@bku.edu.vn / 123456</div>
+                    <div className="bg-gray-50 p-2 rounded text-xs sm:text-sm">student1@vnu.edu.vn / 123456</div>
                   </div>
                 </div>
               </div>

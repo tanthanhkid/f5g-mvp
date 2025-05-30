@@ -84,7 +84,7 @@ const NotificationSystem: React.FC<NotificationSystemProps> = ({
   const visibleNotifications = notifications.slice(0, 5);
 
   return (
-    <div className="fixed top-4 right-4 z-50 space-y-3 max-w-sm w-full">
+    <div className="fixed top-20 right-4 z-40 space-y-3 max-w-sm w-full sm:max-w-xs sm:right-6 md:max-w-sm md:right-4">
       <AnimatePresence>
         {visibleNotifications.map((notification) => {
           const colors = getColors(notification.type);
@@ -99,12 +99,12 @@ const NotificationSystem: React.FC<NotificationSystemProps> = ({
               className="relative"
             >
               {/* Notification Card */}
-              <div className={`bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl border ${colors.border} overflow-hidden`}>
+              <div className={`bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl border ${colors.border} overflow-hidden mx-2 sm:mx-0`}>
                 {/* Colored Top Bar */}
                 <div className={`h-1 ${colors.bg}`} />
                 
-                <div className="p-4">
-                  <div className="flex items-start space-x-3">
+                <div className="p-3 sm:p-4">
+                  <div className="flex items-start space-x-2 sm:space-x-3">
                     {/* Icon */}
                     <div className={`${colors.icon} mt-0.5 flex-shrink-0`}>
                       {getIcon(notification.type)}
@@ -112,10 +112,10 @@ const NotificationSystem: React.FC<NotificationSystemProps> = ({
                     
                     {/* Content */}
                     <div className="flex-1 min-w-0">
-                      <h4 className={`font-semibold ${colors.text} text-sm`}>
+                      <h4 className={`font-semibold ${colors.text} text-xs sm:text-sm`}>
                         {notification.title}
                       </h4>
-                      <p className="text-gray-600 text-sm mt-1 leading-relaxed">
+                      <p className="text-gray-600 text-xs sm:text-sm mt-1 leading-relaxed">
                         {notification.message}
                       </p>
                       
@@ -123,7 +123,7 @@ const NotificationSystem: React.FC<NotificationSystemProps> = ({
                       {notification.action && (
                         <button
                           onClick={notification.action.onClick}
-                          className={`mt-3 text-xs font-medium ${colors.icon} hover:underline`}
+                          className={`mt-2 sm:mt-3 text-xs font-medium ${colors.icon} hover:underline`}
                         >
                           {notification.action.label}
                         </button>
@@ -133,9 +133,9 @@ const NotificationSystem: React.FC<NotificationSystemProps> = ({
                     {/* Close Button */}
                     <button
                       onClick={() => onRemove(notification.id)}
-                      className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0"
+                      className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0 p-1"
                     >
-                      <X className="w-4 h-4" />
+                      <X className="w-3 h-3 sm:w-4 sm:h-4" />
                     </button>
                   </div>
                 </div>
@@ -147,7 +147,7 @@ const NotificationSystem: React.FC<NotificationSystemProps> = ({
                   initial={{ width: "100%" }}
                   animate={{ width: "0%" }}
                   transition={{ duration: notification.duration / 1000, ease: "linear" }}
-                  className={`absolute bottom-0 left-0 h-0.5 ${colors.bg}`}
+                  className={`absolute bottom-0 left-0 h-0.5 ${colors.bg} mx-2 sm:mx-0`}
                   onAnimationComplete={() => onRemove(notification.id)}
                 />
               )}
@@ -161,7 +161,7 @@ const NotificationSystem: React.FC<NotificationSystemProps> = ({
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="text-center"
+          className="text-center mx-2 sm:mx-0"
         >
           <div className="bg-gray-800/90 backdrop-blur-sm text-white text-xs px-3 py-2 rounded-full">
             +{notifications.length - 5} thông báo khác

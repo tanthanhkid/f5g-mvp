@@ -177,44 +177,44 @@ export default function QuizPage() {
       <LoadingOverlay isVisible={isLoading} message="Đang tải..." />
       <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <header className="bg-white shadow-sm border-b relative z-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
+          <div className="flex justify-between items-center py-3 sm:py-4">
             <button
               onClick={handleBackToDashboard}
-              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+              className="flex items-center space-x-1 sm:space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
             >
-              <ArrowLeft className="w-5 h-5" />
-              <span>Quay lại</span>
+              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-sm sm:text-base">Quay lại</span>
             </button>
             
             {/* Logo ở giữa */}
             <button 
               onClick={() => router.push('/')}
-              className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+              className="flex items-center space-x-1 sm:space-x-2 hover:opacity-80 transition-opacity"
             >
-              <div className="w-8 h-8 rounded-lg overflow-hidden">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg overflow-hidden">
                 <img 
                   src="/17164524823262_logo-web-con-voi.png" 
                   alt="Freedom Training Logo" 
                   className="w-full h-full object-contain"
                 />
               </div>
-              <span className="text-lg font-bold text-gray-900">Freedom Training</span>
+              <span className="text-sm sm:text-lg font-bold text-gray-900">Freedom Training</span>
             </button>
             
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2 text-gray-600">
-                <Clock className="w-5 h-5" />
-                <span className="font-medium">{timeLeft}s</span>
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              <div className="flex items-center space-x-1 sm:space-x-2 text-gray-600">
+                <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="font-medium text-sm sm:text-base">{timeLeft}s</span>
               </div>
-              <div className="text-sm text-gray-600">
+              <div className="text-xs sm:text-sm text-gray-600">
                 {currentQuestion + 1}/{questions.length}
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Progress Bar */}
