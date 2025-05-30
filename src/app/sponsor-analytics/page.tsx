@@ -61,7 +61,7 @@ export default function SponsorAnalyticsPage() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             📊 Analytics Dashboard
           </h1>
-          <p className="text-gray-600">
+          <p className="text-black">
             Theo dõi hiệu quả chiến dịch marketing và ROI real-time
           </p>
         </div>
@@ -70,11 +70,11 @@ export default function SponsorAnalyticsPage() {
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
           <div className="flex flex-wrap gap-4 items-center justify-between">
             <div className="flex items-center gap-4">
-              <label className="text-sm font-medium text-gray-700">Nhà tài trợ:</label>
+              <label className="text-sm font-medium text-black">Nhà tài trợ:</label>
               <select 
                 value={selectedSponsor}
                 onChange={(e) => setSelectedSponsor(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black"
               >
                 <option value="VCB">Vietcombank</option>
                 <option value="FPT">FPT Corporation</option>
@@ -83,11 +83,11 @@ export default function SponsorAnalyticsPage() {
             </div>
             
             <div className="flex items-center gap-4">
-              <label className="text-sm font-medium text-gray-700">Thời gian:</label>
+              <label className="text-sm font-medium text-black">Thời gian:</label>
               <select 
                 value={timeRange}
                 onChange={(e) => setTimeRange(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black"
               >
                 <option value="7d">7 ngày qua</option>
                 <option value="30d">30 ngày qua</option>
@@ -103,7 +103,7 @@ export default function SponsorAnalyticsPage() {
           <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Online Users</p>
+                <p className="text-sm font-medium text-black">Online Users</p>
                 <p className="text-2xl font-bold text-gray-900">{formatNumber(analyticsData.realTimeMetrics.currentOnlineUsers)}</p>
               </div>
               <Activity className="w-8 h-8 text-green-500" />
@@ -114,7 +114,7 @@ export default function SponsorAnalyticsPage() {
           <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Quiz hôm nay</p>
+                <p className="text-sm font-medium text-black">Quiz hôm nay</p>
                 <p className="text-2xl font-bold text-gray-900">{formatNumber(analyticsData.realTimeMetrics.todayQuizzesTaken)}</p>
               </div>
               <Target className="w-8 h-8 text-blue-500" />
@@ -125,7 +125,7 @@ export default function SponsorAnalyticsPage() {
           <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">TUTE kiếm được</p>
+                <p className="text-sm font-medium text-black">TUTE kiếm được</p>
                 <p className="text-2xl font-bold text-gray-900">{formatNumber(analyticsData.realTimeMetrics.todayTuteEarned)}</p>
               </div>
               <Award className="w-8 h-8 text-purple-500" />
@@ -136,7 +136,7 @@ export default function SponsorAnalyticsPage() {
           <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-orange-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Pool còn lại</p>
+                <p className="text-sm font-medium text-black">Pool còn lại</p>
                 <p className="text-lg font-bold text-gray-900">{formatCurrency(analyticsData.realTimeMetrics.currentPoolBalance)}</p>
               </div>
               <PieChart className="w-8 h-8 text-orange-500" />
@@ -158,7 +158,7 @@ export default function SponsorAnalyticsPage() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Eye className="w-5 h-5 text-blue-500" />
-                  <span className="text-gray-700">Impressions</span>
+                  <span className="text-black">Impressions</span>
                 </div>
                 <span className="text-xl font-bold text-gray-900">{formatNumber(currentSponsorData.impressions)}</span>
               </div>
@@ -166,7 +166,7 @@ export default function SponsorAnalyticsPage() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <MousePointer className="w-5 h-5 text-green-500" />
-                  <span className="text-gray-700">Clicks</span>
+                  <span className="text-black">Clicks</span>
                 </div>
                 <span className="text-xl font-bold text-gray-900">{formatNumber(currentSponsorData.clicks)}</span>
               </div>
@@ -174,7 +174,7 @@ export default function SponsorAnalyticsPage() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Target className="w-5 h-5 text-purple-500" />
-                  <span className="text-gray-700">CTR</span>
+                  <span className="text-black">CTR</span>
                 </div>
                 <span className="text-xl font-bold text-gray-900">{formatPercentage(currentSponsorData.clickThroughRate)}</span>
               </div>
@@ -182,7 +182,7 @@ export default function SponsorAnalyticsPage() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <TrendingUp className="w-5 h-5 text-orange-500" />
-                  <span className="text-gray-700">ROI</span>
+                  <span className="text-black">ROI</span>
                 </div>
                 <span className="text-xl font-bold text-green-600">{currentSponsorData.roi}x</span>
               </div>
@@ -190,7 +190,7 @@ export default function SponsorAnalyticsPage() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Users className="w-5 h-5 text-indigo-500" />
-                  <span className="text-gray-700">Brand Awareness</span>
+                  <span className="text-black">Brand Awareness</span>
                 </div>
                 <span className="text-xl font-bold text-gray-900">{formatPercentage(currentSponsorData.brandAwareness)}</span>
               </div>
@@ -206,7 +206,7 @@ export default function SponsorAnalyticsPage() {
             <div className="space-y-4">
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium text-gray-700">Brand Recall</span>
+                  <span className="text-sm font-medium text-black">Brand Recall</span>
                   <span className="text-sm font-bold text-gray-900">{formatPercentage(currentSponsorData.performanceMetrics.brandRecall)}</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
@@ -219,7 +219,7 @@ export default function SponsorAnalyticsPage() {
 
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium text-gray-700">Brand Consideration</span>
+                  <span className="text-sm font-medium text-black">Brand Consideration</span>
                   <span className="text-sm font-bold text-gray-900">{formatPercentage(currentSponsorData.performanceMetrics.brandConsideration)}</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
@@ -232,7 +232,7 @@ export default function SponsorAnalyticsPage() {
 
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium text-gray-700">Intent to Purchase</span>
+                  <span className="text-sm font-medium text-black">Intent to Purchase</span>
                   <span className="text-sm font-bold text-gray-900">{formatPercentage(currentSponsorData.performanceMetrics.intentToPurchase)}</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
@@ -245,7 +245,7 @@ export default function SponsorAnalyticsPage() {
 
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium text-gray-700">Social Sharing</span>
+                  <span className="text-sm font-medium text-black">Social Sharing</span>
                   <span className="text-sm font-bold text-gray-900">{formatNumber(currentSponsorData.performanceMetrics.socialSharing)}</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
@@ -268,7 +268,7 @@ export default function SponsorAnalyticsPage() {
               {Object.entries(currentSponsorData.demographics.age).map(([age, percentage]) => (
                 <div key={age}>
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-sm text-gray-700">{age} tuổi</span>
+                    <span className="text-sm text-black">{age} tuổi</span>
                     <span className="text-sm font-bold text-gray-900">{percentage}%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
@@ -289,7 +289,7 @@ export default function SponsorAnalyticsPage() {
               {Object.entries(currentSponsorData.demographics.universities).map(([uni, percentage]) => (
                 <div key={uni}>
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-sm text-gray-700">{uni}</span>
+                    <span className="text-sm text-black">{uni}</span>
                     <span className="text-sm font-bold text-gray-900">{percentage}%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
@@ -310,7 +310,7 @@ export default function SponsorAnalyticsPage() {
               {Object.entries(currentSponsorData.demographics.majors).map(([major, percentage]) => (
                 <div key={major}>
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-sm text-gray-700">{major}</span>
+                    <span className="text-sm text-black">{major}</span>
                     <span className="text-sm font-bold text-gray-900">{percentage}%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
@@ -351,7 +351,7 @@ export default function SponsorAnalyticsPage() {
                   .map((campaign) => (
                   <tr key={campaign.id} className="border-b border-gray-100 hover:bg-gray-50">
                     <td className="py-3 font-medium text-gray-900">{campaign.name}</td>
-                    <td className="py-3 text-gray-600">{campaign.startDate} - {campaign.endDate}</td>
+                    <td className="py-3 text-black">{campaign.startDate} - {campaign.endDate}</td>
                     <td className="py-3 text-right text-gray-900">{formatCurrency(campaign.budget)}</td>
                     <td className="py-3 text-right text-gray-900">{formatCurrency(campaign.spent)}</td>
                     <td className="py-3 text-right text-gray-900">{formatNumber(campaign.impressions)}</td>

@@ -9,6 +9,7 @@ import { ChevronLeft, ChevronRight, BookOpen, Play, HelpCircle, CheckCircle, Clo
 import TextBlock from '@/components/ContentBlocks/TextBlock';
 import VideoBlock from '@/components/ContentBlocks/VideoBlock';
 import QuizBlock from '@/components/ContentBlocks/QuizBlock';
+import NativeAd from '@/components/NativeAd';
 import quizTopicsData from '../../../../data/quiz-topics.json';
 
 interface QuizTopic {
@@ -548,6 +549,12 @@ export default function EnhancedQuizPage() {
               </div>
             </div>
           </div>
+
+          {/* Post-Quiz Ad - hiển thị sau khi hoàn thành */}
+          <NativeAd 
+            placement="post_quiz"
+            className="max-w-2xl mx-auto"
+          />
         </div>
       </div>
     );
@@ -709,24 +716,50 @@ export default function EnhancedQuizPage() {
                       isActive={true}
                     />
                   )}
+
+                  {/* Learning Break Ad - hiển thị sau block thứ 2 */}
+                  {session.currentBlockIndex === 1 && (
+                    <NativeAd 
+                      placement="learning_break"
+                      className="max-w-2xl mx-auto"
+                    />
+                  )}
                 </>
+              )}
+
+              {/* Pre-Quiz Ad - hiển thị khi bắt đầu quiz */}
+              {session.phase === 'quiz' && session.currentQuestionIndex === 0 && (
+                <NativeAd 
+                  placement="pre_quiz"
+                  className="max-w-2xl mx-auto"
+                />
               )}
 
               {/* Quiz Phase */}
               {session.phase === 'quiz' && currentQuestion && (
-                <QuizBlock
-                  block={{
-                    type: 'quiz',
-                    id: currentQuestion.id,
-                    quiz: currentQuestion
-                  }}
-                  onComplete={(answer, isCorrect) => 
-                    handleQuizAnswer(answer, isCorrect)
-                  }
-                  onNext={handleNextQuestion}
-                  isActive={true}
-                  isLastQuestion={session.currentQuestionIndex === session.questions.length - 1}
-                />
+                <>
+                  <QuizBlock
+                    block={{
+                      type: 'quiz',
+                      id: currentQuestion.id,
+                      quiz: currentQuestion
+                    }}
+                    onComplete={(answer, isCorrect) => 
+                      handleQuizAnswer(answer, isCorrect)
+                    }
+                    onNext={handleNextQuestion}
+                    isActive={true}
+                    isLastQuestion={session.currentQuestionIndex === session.questions.length - 1}
+                  />
+
+                  {/* Between Quiz Ad - hiển thị giữa câu 2 và 3 */}
+                  {session.currentQuestionIndex === 1 && (
+                    <NativeAd 
+                      placement="between_quiz"
+                      className="max-w-xl mx-auto"
+                    />
+                  )}
+                </>
               )}
 
               {/* Navigation */}

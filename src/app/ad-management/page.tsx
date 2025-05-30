@@ -42,7 +42,7 @@ export default function AdManagementPage() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center gap-3">
             🤖 Programmatic Advertising
           </h1>
-          <p className="text-gray-600">
+          <p className="text-black">
             Quản lý quảng cáo tự động với AI optimization và real-time bidding
           </p>
         </div>
@@ -51,11 +51,11 @@ export default function AdManagementPage() {
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
           <div className="flex flex-wrap gap-6 items-center justify-between">
             <div className="flex items-center gap-4">
-              <label className="text-sm font-medium text-gray-700">Nhà tài trợ:</label>
+              <label className="text-sm font-medium text-black">Nhà tài trợ:</label>
               <select 
                 value={selectedSponsor}
                 onChange={(e) => setSelectedSponsor(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black"
               >
                 <option value="VCB">Vietcombank</option>
                 <option value="FPT">FPT Corporation</option>
@@ -66,7 +66,7 @@ export default function AdManagementPage() {
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-2">
                 <Bot className="w-5 h-5 text-blue-600" />
-                <label className="text-sm font-medium text-gray-700">AI Optimization:</label>
+                <label className="text-sm font-medium text-black">AI Optimization:</label>
                 <button
                   onClick={() => setAutoOptimization(!autoOptimization)}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
@@ -81,7 +81,7 @@ export default function AdManagementPage() {
 
               <div className="flex items-center gap-2">
                 <Zap className="w-5 h-5 text-orange-600" />
-                <label className="text-sm font-medium text-gray-700">Real-time Bidding:</label>
+                <label className="text-sm font-medium text-black">Real-time Bidding:</label>
                 <button
                   onClick={() => setRealTimeBidding(!realTimeBidding)}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
@@ -102,7 +102,7 @@ export default function AdManagementPage() {
           <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Bid Volume</p>
+                <p className="text-sm font-medium text-black">Bid Volume</p>
                 <p className="text-2xl font-bold text-gray-900">{formatNumber(adsData.realTimeMetrics.currentBidVolume)}</p>
               </div>
               <Target className="w-8 h-8 text-blue-500" />
@@ -113,7 +113,7 @@ export default function AdManagementPage() {
           <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Average CPM</p>
+                <p className="text-sm font-medium text-black">Average CPM</p>
                 <p className="text-2xl font-bold text-gray-900">{formatCurrency(adsData.realTimeMetrics.averageCPM)}</p>
               </div>
               <DollarSign className="w-8 h-8 text-green-500" />
@@ -124,7 +124,7 @@ export default function AdManagementPage() {
           <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Win Rate</p>
+                <p className="text-sm font-medium text-black">Win Rate</p>
                 <p className="text-2xl font-bold text-gray-900">{formatPercentage(adsData.realTimeMetrics.currentWinRate[selectedSponsor as keyof typeof adsData.realTimeMetrics.currentWinRate])}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-purple-500" />
@@ -135,7 +135,7 @@ export default function AdManagementPage() {
           <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-orange-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Top Format</p>
+                <p className="text-sm font-medium text-black">Top Format</p>
                 <p className="text-lg font-bold text-gray-900">{adsData.realTimeMetrics.topPerformingFormat}</p>
               </div>
               <BarChart3 className="w-8 h-8 text-orange-500" />
@@ -155,22 +155,22 @@ export default function AdManagementPage() {
             
             <div className="space-y-4">
               <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                <span className="text-gray-700 font-medium">Daily Budget</span>
+                <span className="text-black font-medium">Daily Budget</span>
                 <span className="text-xl font-bold text-gray-900">{formatCurrency(currentSponsorData.dailyBudget)}</span>
               </div>
               
               <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                <span className="text-gray-700 font-medium">Max CPC</span>
+                <span className="text-black font-medium">Max CPC</span>
                 <span className="text-xl font-bold text-gray-900">{formatCurrency(currentSponsorData.maxCPC)}</span>
               </div>
               
               <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                <span className="text-gray-700 font-medium">Target CTR</span>
+                <span className="text-black font-medium">Target CTR</span>
                 <span className="text-xl font-bold text-gray-900">{formatPercentage(currentSponsorData.targetCTR)}</span>
               </div>
               
               <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                <span className="text-gray-700 font-medium">Priority Level</span>
+                <span className="text-black font-medium">Priority Level</span>
                 <span className={`px-3 py-1 rounded-full text-sm font-bold ${
                   currentSponsorData.priority === 'high' 
                     ? 'bg-red-100 text-red-800' 
@@ -192,32 +192,32 @@ export default function AdManagementPage() {
             <div className="space-y-4">
               <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
                 <div>
-                  <span className="text-gray-700 font-medium">CTR Prediction</span>
-                  <p className="text-sm text-gray-500">Model accuracy</p>
+                  <span className="text-black font-medium">CTR Prediction</span>
+                  <p className="text-sm text-black">Model accuracy</p>
                 </div>
                 <span className="text-xl font-bold text-blue-600">{formatPercentage(adsData.aiOptimization.models.ctrPrediction.accuracy)}</span>
               </div>
               
               <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
                 <div>
-                  <span className="text-gray-700 font-medium">Performance Improvement</span>
-                  <p className="text-sm text-gray-500">vs manual bidding</p>
+                  <span className="text-black font-medium">Performance Improvement</span>
+                  <p className="text-sm text-black">vs manual bidding</p>
                 </div>
                 <span className="text-xl font-bold text-green-600">+{formatPercentage(adsData.aiOptimization.models.bidOptimization.performanceImprovement)}</span>
               </div>
               
               <div className="flex justify-between items-center p-4 bg-purple-50 rounded-lg">
                 <div>
-                  <span className="text-gray-700 font-medium">Audience Segments</span>
-                  <p className="text-sm text-gray-500">Active segments</p>
+                  <span className="text-black font-medium">Audience Segments</span>
+                  <p className="text-sm text-black">Active segments</p>
                 </div>
                 <span className="text-xl font-bold text-purple-600">{adsData.aiOptimization.models.audienceSegmentation.segments}</span>
               </div>
               
               <div className="flex justify-between items-center p-4 bg-orange-50 rounded-lg">
                 <div>
-                  <span className="text-gray-700 font-medium">Precision Score</span>
-                  <p className="text-sm text-gray-500">Targeting accuracy</p>
+                  <span className="text-black font-medium">Precision Score</span>
+                  <p className="text-sm text-black">Targeting accuracy</p>
                 </div>
                 <span className="text-xl font-bold text-orange-600">{formatPercentage(adsData.aiOptimization.models.audienceSegmentation.precision)}</span>
               </div>
@@ -235,8 +235,8 @@ export default function AdManagementPage() {
             {adsData.adFormats.map((format) => (
               <div key={format.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                 <h4 className="font-semibold text-gray-900 mb-2">{format.type.toUpperCase()}</h4>
-                <p className="text-sm text-gray-600 mb-2">{format.size}</p>
-                <p className="text-xs text-gray-500 mb-3">{format.placement}</p>
+                <p className="text-sm text-black mb-2">{format.size}</p>
+                <p className="text-xs text-black mb-3">{format.placement}</p>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>CPM:</span>
@@ -271,30 +271,30 @@ export default function AdManagementPage() {
                       <img src={ad.imageUrl} alt={ad.sponsor} className="w-12 h-12 object-contain rounded" />
                       <div>
                         <h4 className="font-bold text-gray-900">{ad.title}</h4>
-                        <p className="text-sm text-gray-600">{ad.description}</p>
+                        <p className="text-sm text-black">{ad.description}</p>
                       </div>
                     </div>
                     
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                       <div>
-                        <p className="text-xs text-gray-500">Format</p>
+                        <p className="text-xs text-black">Format</p>
                         <p className="font-semibold text-gray-900">{ad.format}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500">Bid Amount</p>
+                        <p className="text-xs text-black">Bid Amount</p>
                         <p className="font-semibold text-gray-900">{formatCurrency(ad.bidAmount)}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500">CTR</p>
+                        <p className="text-xs text-black">CTR</p>
                         <p className="font-semibold text-green-600">{formatPercentage(ad.performance.ctr)}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500">Conversions</p>
+                        <p className="text-xs text-black">Conversions</p>
                         <p className="font-semibold text-blue-600">{formatNumber(ad.performance.conversions)}</p>
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <div className="flex items-center gap-4 text-sm text-black">
                       <span>📊 {formatNumber(ad.performance.impressions)} impressions</span>
                       <span>🖱️ {formatNumber(ad.performance.clicks)} clicks</span>
                       <span>🎯 {formatPercentage(ad.performance.conversionRate)} conversion rate</span>
@@ -340,7 +340,7 @@ export default function AdManagementPage() {
               <tbody>
                 {adsData.auctionData.map((auction, index) => (
                   <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
-                    <td className="py-3 text-gray-600">
+                    <td className="py-3 text-black">
                       {new Date(auction.timestamp).toLocaleTimeString('vi-VN')}
                     </td>
                     <td className="py-3 font-medium text-gray-900">{auction.adSlot}</td>
@@ -350,10 +350,10 @@ export default function AdManagementPage() {
                       </span>
                     </td>
                     <td className="py-3 text-right font-bold text-gray-900">{formatCurrency(auction.finalPrice)}</td>
-                    <td className="py-3 text-gray-600">
+                    <td className="py-3 text-black">
                       {auction.user.age} tuổi, {auction.user.major}, {auction.user.university}
                     </td>
-                    <td className="py-3 text-gray-600">
+                    <td className="py-3 text-black">
                       {auction.bidders.length} bidders
                     </td>
                   </tr>
