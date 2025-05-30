@@ -1,0 +1,325 @@
+{
+  "program": {
+    "name": "Freedom Training Creator Program",
+    "description": "Chương trình đối tác nội dung giáo dục với các influencer và content creator",
+    "launchDate": "2024-01-01",
+    "totalBudget": 500000000,
+    "currentSpent": 285000000,
+    "partnersCount": 28,
+    "totalReach": 2456789,
+    "totalEngagement": 678523
+  },
+  "tiers": [
+    {
+      "id": "nano",
+      "name": "Nano Influencer",
+      "followerRange": "1K-10K",
+      "commissionRate": 0.08,
+      "bonusPerQuiz": 50000,
+      "requirements": {
+        "minFollowers": 1000,
+        "engagementRate": 0.03,
+        "contentQuality": "good",
+        "niche": ["education", "technology", "lifestyle"]
+      },
+      "benefits": [
+        "8% commission từ TUTE pool",
+        "50K VND bonus mỗi quiz viral",
+        "Free access toàn bộ courses",
+        "Monthly creator toolkit"
+      ]
+    },
+    {
+      "id": "micro",
+      "name": "Micro Influencer",
+      "followerRange": "10K-100K",
+      "commissionRate": 0.12,
+      "bonusPerQuiz": 100000,
+      "requirements": {
+        "minFollowers": 10000,
+        "engagementRate": 0.05,
+        "contentQuality": "excellent",
+        "niche": ["education", "technology", "career"]
+      },
+      "benefits": [
+        "12% commission từ TUTE pool",
+        "100K VND bonus mỗi quiz viral",
+        "Priority content review",
+        "Co-branded campaigns",
+        "Early access to new features"
+      ]
+    },
+    {
+      "id": "macro",
+      "name": "Macro Influencer",
+      "followerRange": "100K-1M",
+      "commissionRate": 0.15,
+      "bonusPerQuiz": 200000,
+      "requirements": {
+        "minFollowers": 100000,
+        "engagementRate": 0.04,
+        "contentQuality": "exceptional",
+        "niche": ["education", "technology", "business"]
+      },
+      "benefits": [
+        "15% commission từ TUTE pool",
+        "200K VND bonus mỗi quiz viral",
+        "Dedicated account manager",
+        "Custom campaigns",
+        "Revenue sharing opportunities"
+      ]
+    }
+  ],
+  "activeInfluencers": [
+    {
+      "id": "inf_001",
+      "name": "Nguyễn Thành Long",
+      "username": "@techteacher",
+      "avatar": "https://randomuser.me/api/portraits/men/1.jpg",
+      "tier": "micro",
+      "followers": 45600,
+      "engagementRate": 0.067,
+      "niche": ["technology", "programming", "education"],
+      "platforms": {
+        "tiktok": 28000,
+        "youtube": 15600,
+        "facebook": 2000
+      },
+      "performance": {
+        "totalReferrals": 1245,
+        "conversionRate": 0.23,
+        "avgWatchTime": 180,
+        "viralQuizzes": 8,
+        "totalEarnings": 45600000,
+        "monthlyViews": 567890
+      },
+      "joinDate": "2024-02-15",
+      "status": "active",
+      "contentStyle": "Educational tech content với humor",
+      "bestPerformingContent": "JavaScript tutorials và coding challenges"
+    },
+    {
+      "id": "inf_002",
+      "name": "Trần Minh Châu",
+      "username": "@studysmart",
+      "avatar": "https://randomuser.me/api/portraits/women/2.jpg",
+      "tier": "macro",
+      "followers": 234500,
+      "engagementRate": 0.052,
+      "niche": ["education", "study tips", "career"],
+      "platforms": {
+        "tiktok": 180000,
+        "youtube": 45000,
+        "instagram": 9500
+      },
+      "performance": {
+        "totalReferrals": 3456,
+        "conversionRate": 0.31,
+        "avgWatchTime": 220,
+        "viralQuizzes": 15,
+        "totalEarnings": 89500000,
+        "monthlyViews": 1234567
+      },
+      "joinDate": "2024-01-20",
+      "status": "active",
+      "contentStyle": "Study motivation và productivity hacks",
+      "bestPerformingContent": "Study with me sessions và exam preparation"
+    },
+    {
+      "id": "inf_003",
+      "name": "Lê Quang Minh",
+      "username": "@financefordummies",
+      "avatar": "https://randomuser.me/api/portraits/men/3.jpg",
+      "tier": "micro",
+      "followers": 67800,
+      "engagementRate": 0.071,
+      "niche": ["finance", "business", "career"],
+      "platforms": {
+        "youtube": 34000,
+        "tiktok": 28000,
+        "linkedin": 5800
+      },
+      "performance": {
+        "totalReferrals": 1890,
+        "conversionRate": 0.28,
+        "avgWatchTime": 195,
+        "viralQuizzes": 11,
+        "totalEarnings": 62300000,
+        "monthlyViews": 789012
+      },
+      "joinDate": "2024-03-01",
+      "status": "active",
+      "contentStyle": "Finance education dễ hiểu cho sinh viên",
+      "bestPerformingContent": "Personal finance tips và investment basics"
+    },
+    {
+      "id": "inf_004",
+      "name": "Phạm Thu Hà",
+      "username": "@englishwithha",
+      "avatar": "https://randomuser.me/api/portraits/women/4.jpg",
+      "tier": "nano",
+      "followers": 8500,
+      "engagementRate": 0.089,
+      "niche": ["english", "language", "education"],
+      "platforms": {
+        "tiktok": 5600,
+        "youtube": 2400,
+        "instagram": 500
+      },
+      "performance": {
+        "totalReferrals": 456,
+        "conversionRate": 0.19,
+        "avgWatchTime": 165,
+        "viralQuizzes": 3,
+        "totalEarnings": 18900000,
+        "monthlyViews": 123456
+      },
+      "joinDate": "2024-04-15",
+      "status": "active",
+      "contentStyle": "English learning với phương pháp độc đáo",
+      "bestPerformingContent": "Grammar shorts và vocabulary games"
+    }
+  ],
+  "campaigns": [
+    {
+      "id": "camp_inf_001",
+      "name": "Back to School 2024",
+      "description": "Chiến dịch quảng bá nền tảng trong mùa tựu trường",
+      "startDate": "2024-08-15",
+      "endDate": "2024-09-30",
+      "budget": 150000000,
+      "spent": 127000000,
+      "participatingInfluencers": ["inf_001", "inf_002", "inf_003"],
+      "targetReach": 1000000,
+      "actualReach": 1234567,
+      "targetEngagement": 50000,
+      "actualEngagement": 67890,
+      "contentTypes": ["video", "quiz_challenge", "live_stream"],
+      "status": "completed",
+      "roi": 2.4
+    },
+    {
+      "id": "camp_inf_002",
+      "name": "Holiday Learning Challenge",
+      "description": "Thử thách học tập trong kỳ nghỉ lễ",
+      "startDate": "2024-12-01",
+      "endDate": "2024-12-31",
+      "budget": 80000000,
+      "spent": 45000000,
+      "participatingInfluencers": ["inf_002", "inf_004"],
+      "targetReach": 500000,
+      "actualReach": 378000,
+      "targetEngagement": 25000,
+      "actualEngagement": 28900,
+      "contentTypes": ["video", "quiz_challenge"],
+      "status": "active",
+      "roi": 1.8
+    }
+  ],
+  "contentLibrary": [
+    {
+      "id": "content_001",
+      "influencer": "inf_001",
+      "title": "5 JavaScript Tricks Mọi Developer Cần Biết",
+      "type": "video",
+      "platform": "tiktok",
+      "publishDate": "2024-12-10",
+      "views": 89567,
+      "likes": 8934,
+      "shares": 567,
+      "comments": 234,
+      "referrals": 145,
+      "earnings": 2890000,
+      "hashtags": ["#javascript", "#coding", "#freedomtraining", "#programming"],
+      "engagement": 0.12
+    },
+    {
+      "id": "content_002",
+      "influencer": "inf_002",
+      "title": "Học Như Thế Nào Để Nhớ Lâu?",
+      "type": "video",
+      "platform": "youtube",
+      "publishDate": "2024-12-08",
+      "views": 156789,
+      "likes": 12456,
+      "shares": 890,
+      "comments": 567,
+      "referrals": 234,
+      "earnings": 4680000,
+      "hashtags": ["#studytips", "#education", "#memory", "#freedomtraining"],
+      "engagement": 0.089
+    }
+  ],
+  "leaderboard": {
+    "monthly": [
+      {
+        "rank": 1,
+        "influencer": "inf_002",
+        "earnings": 15600000,
+        "referrals": 567,
+        "engagement": 45000
+      },
+      {
+        "rank": 2,
+        "influencer": "inf_001",
+        "earnings": 12300000,
+        "referrals": 456,
+        "engagement": 38000
+      },
+      {
+        "rank": 3,
+        "influencer": "inf_003",
+        "earnings": 9800000,
+        "referrals": 389,
+        "engagement": 29000
+      }
+    ],
+    "allTime": [
+      {
+        "rank": 1,
+        "influencer": "inf_002",
+        "earnings": 89500000,
+        "referrals": 3456,
+        "engagement": 234000
+      },
+      {
+        "rank": 2,
+        "influencer": "inf_003",
+        "earnings": 62300000,
+        "referrals": 1890,
+        "engagement": 167000
+      },
+      {
+        "rank": 3,
+        "influencer": "inf_001",
+        "earnings": 45600000,
+        "referrals": 1245,
+        "engagement": 134000
+      }
+    ]
+  },
+  "analytics": {
+    "topPerformingPlatform": "tiktok",
+    "bestContentType": "video",
+    "avgConversionRate": 0.25,
+    "avgEngagementRate": 0.067,
+    "peakHours": ["19:00-21:00", "12:00-14:00"],
+    "topHashtags": ["#freedomtraining", "#education", "#studytips", "#technology"],
+    "audienceDemographics": {
+      "age": {
+        "18-22": 45,
+        "23-25": 35,
+        "26-30": 20
+      },
+      "gender": {
+        "female": 58,
+        "male": 42
+      },
+      "education": {
+        "university": 67,
+        "college": 23,
+        "highschool": 10
+      }
+    }
+  }
+} 

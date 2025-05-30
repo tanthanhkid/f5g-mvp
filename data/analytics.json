@@ -1,0 +1,169 @@
+{
+  "overview": {
+    "totalUsers": 15420,
+    "activeUsers": 8932,
+    "dailyActiveUsers": 2156,
+    "monthlyActiveUsers": 12845,
+    "totalQuizzesTaken": 45672,
+    "averageSessionDuration": 18.5,
+    "conversionRate": 0.68,
+    "retentionRate": 0.74
+  },
+  "sponsorAnalytics": {
+    "VCB": {
+      "impressions": 156789,
+      "clicks": 8924,
+      "clickThroughRate": 0.057,
+      "brandAwareness": 0.83,
+      "sponsoredQuizzes": 1245,
+      "userEngagement": 0.72,
+      "roi": 2.34,
+      "demographics": {
+        "age": {
+          "18-22": 45,
+          "23-25": 35,
+          "26-30": 20
+        },
+        "universities": {
+          "HUST": 35,
+          "BKU": 28,
+          "VNU": 22,
+          "others": 15
+        },
+        "majors": {
+          "IT": 40,
+          "Engineering": 25,
+          "Business": 20,
+          "Others": 15
+        }
+      },
+      "performanceMetrics": {
+        "brandRecall": 0.78,
+        "brandConsideration": 0.65,
+        "intentToPurchase": 0.42,
+        "socialSharing": 234
+      }
+    },
+    "FPT": {
+      "impressions": 125432,
+      "clicks": 7892,
+      "clickThroughRate": 0.063,
+      "brandAwareness": 0.89,
+      "sponsoredQuizzes": 987,
+      "userEngagement": 0.81,
+      "roi": 2.89,
+      "demographics": {
+        "age": {
+          "18-22": 52,
+          "23-25": 30,
+          "26-30": 18
+        },
+        "universities": {
+          "HUST": 38,
+          "BKU": 31,
+          "VNU": 19,
+          "others": 12
+        },
+        "majors": {
+          "IT": 65,
+          "Engineering": 20,
+          "Business": 10,
+          "Others": 5
+        }
+      },
+      "performanceMetrics": {
+        "brandRecall": 0.85,
+        "brandConsideration": 0.73,
+        "intentToPurchase": 0.58,
+        "socialSharing": 189
+      }
+    },
+    "VNM": {
+      "impressions": 98765,
+      "clicks": 5234,
+      "clickThroughRate": 0.053,
+      "brandAwareness": 0.92,
+      "sponsoredQuizzes": 678,
+      "userEngagement": 0.69,
+      "roi": 1.98,
+      "demographics": {
+        "age": {
+          "18-22": 48,
+          "23-25": 32,
+          "26-30": 20
+        },
+        "universities": {
+          "HUST": 30,
+          "BKU": 25,
+          "VNU": 28,
+          "others": 17
+        },
+        "majors": {
+          "IT": 25,
+          "Engineering": 20,
+          "Business": 35,
+          "Others": 20
+        }
+      },
+      "performanceMetrics": {
+        "brandRecall": 0.88,
+        "brandConsideration": 0.71,
+        "intentToPurchase": 0.39,
+        "socialSharing": 156
+      }
+    }
+  },
+  "campaignPerformance": [
+    {
+      "id": "camp_001",
+      "name": "Vietcombank Digital Banking Campaign",
+      "sponsor": "VCB",
+      "startDate": "2024-01-15",
+      "endDate": "2024-02-15",
+      "budget": 280000000,
+      "spent": 245000000,
+      "impressions": 45678,
+      "clicks": 2890,
+      "conversions": 234,
+      "roi": 2.1,
+      "status": "completed"
+    },
+    {
+      "id": "camp_002", 
+      "name": "FPT AI & Technology Showcase",
+      "sponsor": "FPT",
+      "startDate": "2024-02-01",
+      "endDate": "2024-03-01",
+      "budget": 224000000,
+      "spent": 198000000,
+      "impressions": 38900,
+      "clicks": 3456,
+      "conversions": 289,
+      "roi": 2.7,
+      "status": "completed"
+    },
+    {
+      "id": "camp_003",
+      "name": "Vinamilk Healthy Lifestyle",
+      "sponsor": "VNM",
+      "startDate": "2024-03-01",
+      "endDate": "2024-04-01",
+      "budget": 168000000,
+      "spent": 156000000,
+      "impressions": 29800,
+      "clicks": 1890,
+      "conversions": 156,
+      "roi": 1.8,
+      "status": "active"
+    }
+  ],
+  "realTimeMetrics": {
+    "currentOnlineUsers": 423,
+    "todayQuizzesTaken": 1456,
+    "todayTuteEarned": 72800,
+    "currentPoolBalance": 1087650000,
+    "averageQuizScore": 73.5,
+    "topPerformingCategory": "Technology",
+    "peakHours": ["14:00-16:00", "20:00-22:00"]
+  }
+} 

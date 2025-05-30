@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
+import Navigation from "@/components/Navigation";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -82,6 +83,7 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased`}>
         <AuthProvider>
           <NotificationProvider>
+            <Navigation />
             {children}
           </NotificationProvider>
         </AuthProvider>
