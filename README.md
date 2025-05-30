@@ -8,40 +8,82 @@ Một ứng dụng NextJS hiện đại cho việc học tập và kiểm tra ki
 - **Quiz đa dạng**: Hỗ trợ câu hỏi single choice và multiple choice
 - **Hệ thống điểm TUTE**: Tích lũy điểm thưởng cho mỗi câu trả lời đúng
 - **Thi đua giữa các trường**: Bảng xếp hạng theo điểm TUTE của từng trường
+- **Database thực tế**: Sử dụng Neon PostgreSQL để lưu trữ dữ liệu
 - **Giao diện responsive**: Tối ưu cho cả desktop và mobile
 - **Thiết kế hiện đại**: Phong cách trí thức giống Coursera
 
 ## 🛠️ Công nghệ sử dụng
 
 - **Frontend**: NextJS 14 với App Router
+- **Database**: Neon PostgreSQL (Serverless)
+- **ORM**: Neon Serverless Driver
 - **Styling**: Tailwind CSS
 - **Icons**: Lucide React
 - **Language**: TypeScript
-- **Data**: JSON files (không cần database)
+- **Authentication**: Custom JWT-based auth
 
-## 📦 Cài đặt
+## 📦 Cài đặt và Thiết lập
 
-1. Clone repository:
+### Bước 1: Clone repository
+
 ```bash
 git clone <repository-url>
-cd freedom-training
+cd f5g-mvp
 ```
 
-2. Cài đặt dependencies:
+### Bước 2: Cài đặt dependencies
+
 ```bash
 npm install
 ```
 
-3. Chạy ứng dụng:
+### Bước 3: Thiết lập Database
+
+1. **Tạo tài khoản Neon**:
+   - Truy cập [Neon Console](https://neon.tech/)
+   - Đăng ký tài khoản miễn phí
+   - Tạo project mới với tên `f5g-freedom-training`
+
+2. **Lấy Connection String**:
+   - Sau khi tạo project, vào tab **Dashboard**
+   - Tìm phần **Connection Details**
+   - Copy **Connection String**
+
+3. **Cấu hình Environment**:
+   ```bash
+   cp env.example .env
+   ```
+   
+   Mở file `.env` và cập nhật:
+   ```env
+   DATABASE_URL="your_actual_neon_connection_string"
+   POSTGRES_CONNECTION_STRING="your_actual_neon_connection_string"
+   NODE_ENV=development
+   NEXTAUTH_SECRET="your-secret-key-here"
+   NEXTAUTH_URL="http://localhost:3000"
+   ```
+
+4. **Setup Database**:
+   ```bash
+   npm run setup-database
+   ```
+
+5. **Kiểm tra Database** (optional):
+   ```bash
+   npm run db-check
+   ```
+
+### Bước 4: Chạy ứng dụng
+
 ```bash
 npm run dev
 ```
 
-4. Mở trình duyệt và truy cập: `http://localhost:3000`
+Mở trình duyệt và truy cập: `http://localhost:3000`
 
 ## 👥 Tài khoản demo
 
-Sử dụng các tài khoản sau để đăng nhập:
+Sau khi setup database, bạn có thể sử dụng các tài khoản sau để đăng nhập:
 
 | Email | Password | Trường |
 |-------|----------|--------|
@@ -55,26 +97,31 @@ Sử dụng các tài khoản sau để đăng nhập:
 ## 📁 Cấu trúc dự án
 
 ```
-freedom-training/
+f5g-mvp/
 ├── src/
 │   ├── app/                    # App Router pages
-│   │   ├── dashboard/          # Trang dashboard
-│   │   ├── quiz/              # Trang quiz
-│   │   ├── leaderboard/       # Bảng xếp hạng
-│   │   ├── layout.tsx         # Layout chính
-│   │   ├── page.tsx           # Trang đăng nhập
-│   │   └── globals.css        # CSS toàn cục
-│   ├── contexts/              # React Contexts
-│   │   └── AuthContext.tsx    # Context xác thực
-│   ├── lib/                   # Utility functions
-│   │   └── utils.ts           # Helper functions
-│   └── types/                 # TypeScript types
-│       └── index.ts           # Type definitions
-├── data/                      # JSON data files
-│   ├── users.json            # Dữ liệu người dùng
-│   ├── schools.json          # Dữ liệu trường học
-│   ├── quizzes.json          # Câu hỏi quiz
-│   └── settings.json         # Cài đặt ứng dụng
+│   │   ├── api/               # API routes
+│   │   │   ├── auth/          # Authentication
+│   │   │   ├── quiz/          # Quiz operations
+│   │   │   └── leaderboard/   # Leaderboard data
+│   │   ├── dashboard/         # Trang dashboard
+│   │   ├── quiz/             # Trang quiz
+│   │   ├── leaderboard/      # Bảng xếp hạng
+│   │   ├── layout.tsx        # Layout chính
+│   │   ├── page.tsx          # Trang đăng nhập
+│   │   └── globals.css       # CSS toàn cục
+│   ├── contexts/             # React Contexts
+│   │   └── AuthContext.tsx   # Context xác thực
+│   ├── lib/                  # Utility functions
+│   │   ├── db.ts            # Database connection & models
+│   │   └── utils.ts         # Helper functions
+│   └── types/               # TypeScript types
+│       └── index.ts         # Type definitions
+├── scripts/                 # Database scripts
+│   ├── setup-database.sql  # Database schema
+│   ├── seed-data.sql       # Sample data
+│   └── setup-database.js   # Setup script
+├── data/                   # Legacy JSON data (for reference)
 └── README.md
 ```
 
@@ -102,78 +149,53 @@ freedom-training/
 - So sánh điểm TUTE giữa các trường
 - Theo dõi vị trí của trường mình
 
-## ⚙️ Cấu hình
+## 🗃️ Database Schema
 
-Chỉnh sửa file `data/settings.json` để thay đổi:
-
-```json
-{
-  "quizSettings": {
-    "questionsPerQuiz": 5,        // Số câu hỏi mỗi quiz
-    "timePerQuestion": 30,        // Thời gian mỗi câu (giây)
-    "tutePointsPerCorrectAnswer": 1  // Điểm TUTE mỗi câu đúng
-  }
-}
-```
-
-## 📱 Responsive Design
-
-Ứng dụng được thiết kế responsive, hoạt động tốt trên:
-- Desktop (1024px+)
-- Tablet (768px - 1023px)
-- Mobile (< 768px)
-
-## 🎨 Thiết kế
-
-- **Màu chủ đạo**: Blue (#2563eb) và Indigo (#4f46e5)
-- **Font**: Inter (Google Fonts)
-- **Style**: Modern, clean, academic
-- **Icons**: Lucide React
-- **Animations**: Smooth transitions và hover effects
+### Các bảng chính:
+- **schools**: Thông tin các trường đại học
+- **users**: Thông tin sinh viên và điểm TUTE
+- **quizzes**: Câu hỏi với đáp án và độ khó
+- **lessons**: Bài học với nội dung rich text
+- **quiz_categories**: Phân loại câu hỏi
+- **user_quiz_attempts**: Lịch sử làm bài
+- **user_lesson_progress**: Tiến độ học tập
+- **user_achievements**: Huy hiệu và thành tích
 
 ## 🔧 Development
 
 ### Scripts có sẵn
 
 ```bash
-npm run dev          # Chạy development server
-npm run build        # Build production
-npm run start        # Chạy production server
-npm run lint         # Kiểm tra linting
+npm run dev              # Chạy development server
+npm run build            # Build production
+npm run start            # Chạy production server
+npm run lint             # Kiểm tra linting
+npm run setup-database   # Setup database với Neon
+npm run db-check         # Kiểm tra kết nối database
 ```
+
+### API Endpoints
+
+- `POST /api/auth/login` - Đăng nhập
+- `GET /api/quiz/random` - Lấy quiz ngẫu nhiên
+- `POST /api/quiz/submit` - Submit kết quả quiz
+- `GET /api/leaderboard` - Bảng xếp hạng
 
 ### Thêm câu hỏi mới
 
-Chỉnh sửa file `data/quizzes.json`:
+Sử dụng MCP PostgreSQL trong Cursor hoặc chạy SQL trực tiếp:
 
-```json
-{
-  "id": "11",
-  "question": "Câu hỏi mới?",
-  "type": "single",           // "single" hoặc "multiple"
-  "options": [
-    "Đáp án A",
-    "Đáp án B", 
-    "Đáp án C",
-    "Đáp án D"
-  ],
-  "correctAnswer": [0],       // Mảng index của đáp án đúng
-  "category": "Danh mục"
-}
-```
-
-### Thêm trường mới
-
-Chỉnh sửa file `data/schools.json`:
-
-```json
-{
-  "id": "new_school",
-  "name": "Tên trường đầy đủ",
-  "shortName": "TEN_NGAN",
-  "logo": "/images/logo.png",
-  "totalTutePoints": 0
-}
+```sql
+INSERT INTO quizzes (question, type, options, correct_answer, category_id, difficulty, points) 
+VALUES (
+  'Câu hỏi mới?',
+  'single',
+  '["Đáp án A", "Đáp án B", "Đáp án C", "Đáp án D"]'::jsonb,
+  '[0]'::jsonb,
+  'cong-nghe',
+  'easy',
+  1
+);
 ```
 
 ## 🤝 Đóng góp
@@ -184,9 +206,24 @@ Chỉnh sửa file `data/schools.json`:
 4. Push to branch (`git push origin feature/AmazingFeature`)
 5. Mở Pull Request
 
+## 🔍 Troubleshooting
+
+### Lỗi kết nối Database
+- Kiểm tra `DATABASE_URL` trong file `.env`
+- Đảm bảo connection string đúng format
+- Chạy `npm run db-check` để test kết nối
+
+### Lỗi Permission
+- Đảm bảo user database có đủ quyền CREATE, INSERT, SELECT
+- Kiểm tra firewall settings của Neon
+
+### Database bị suspend
+- Neon có thể tự động suspend database khi không sử dụng
+- Đợi vài giây và thử lại
+
 ## 📄 License
 
-Dự án này được phân phối dưới MIT License. Xem file `LICENSE` để biết thêm chi tiết.
+Dự án này được phân phối dưới MIT License.
 
 ## 📞 Liên hệ
 
@@ -195,4 +232,4 @@ Dự án này được phân phối dưới MIT License. Xem file `LICENSE` đ�
 
 ---
 
-**Freedom Training** - Nền tảng học tập trực tuyến hiện đại cho sinh viên Việt Nam 🇻🇳
+**Freedom Training** - Nền tảng học tập trực tuyến hiện đại với database thực tế 🇻🇳

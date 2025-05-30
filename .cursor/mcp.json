@@ -1,0 +1,27 @@
+{
+  "mcpServers": {
+    "postgresql-enhanced": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@henkey/postgres-mcp-server"
+      ],
+      "env": {
+        "DATABASE_URL": "${DATABASE_URL}"
+      },
+      "disabled": false,
+      "alwaysAllow": []
+    },
+    "neon-postgres": {
+      "command": "npx",
+      "args": [
+        "-y", 
+        "@neondatabase/mcp-server-neon",
+        "start",
+        "${NEON_API_KEY}"
+      ],
+      "disabled": true,
+      "alwaysAllow": []
+    }
+  }
+} 
