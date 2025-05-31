@@ -1,18 +1,25 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { School } from '@/types';
-import { Trophy, Medal, Award, ArrowLeft, BookOpen, Users } from 'lucide-react';
-import schoolsData from '../../../data/schools.json';
+import { School, User } from '@/types';
+import { Trophy, Medal, ArrowLeft, Users, Crown, TrendingUp, GraduationCap } from 'lucide-react';
 import LoadingOverlay from '@/components/LoadingOverlay';
 
-export default function LeaderboardPage() {
+interface LeaderboardResponse {
+  success: boolean;
+  leaderboard: School[] | User[];
+}
+
+export default function Leaderboard() {
   const { user } = useAuth();
   const router = useRouter();
-  const [sortedSchools, setSortedSchools] = useState<School[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<'schools' | 'users'>('schools');
+  const [schools, setSchools] = useState<School[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) {
@@ -20,271 +27,231 @@ export default function LeaderboardPage() {
       return;
     }
 
-    // Sắp xếp trường theo điểm TUTE
-    const sorted = [...schoolsData].sort((a, b) => b.totalTutePoints - a.totalTutePoints);
-    setSortedSchools(sorted);
-  }, [user, router]);
+    fetchLeaderboardData();
+  }, [user, router, activeTab]);
 
-  const handleBackToDashboard = async () => {
+  const fetchLeaderboardData = async () => {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    router.push('/dashboard');
+    setError(null);
+
+    try {
+      const response = await fetch(`/api/leaderboard?type=${activeTab}&limit=50`);
+      const data: LeaderboardResponse = await response.json();
+
+      if (data.success) {
+        if (activeTab === 'schools') {
+          setSchools(data.leaderboard as School[]);
+        } else {
+          setUsers(data.leaderboard as User[]);
+        }
+      } else {
+        setError('Không thể tải dữ liệu xếp hạng');
+      }
+    } catch (error) {
+      console.error('Error fetching leaderboard:', error);
+      setError('Có lỗi xảy ra khi tải dữ liệu');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getRankIcon = (rank: number) => {
-    switch (rank) {
-      case 1:
-        return <Trophy className="w-6 h-6 text-yellow-500" />;
-      case 2:
-        return <Medal className="w-6 h-6 text-gray-400" />;
-      case 3:
-        return <Award className="w-6 h-6 text-amber-600" />;
-      default:
-        return (
-          <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center">
-            <span className="text-sm font-bold text-gray-600">{rank}</span>
-          </div>
-        );
-    }
+    if (rank === 1) return <Crown className="w-6 h-6 text-yellow-500" />;
+    if (rank === 2) return <Medal className="w-6 h-6 text-gray-400" />;
+    if (rank === 3) return <Medal className="w-6 h-6 text-amber-600" />;
+    return <span className="font-bold text-gray-600">#{rank}</span>;
   };
 
-  const getRankBadgeColor = (rank: number) => {
-    switch (rank) {
-      case 1:
-        return 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-white';
-      case 2:
-        return 'bg-gradient-to-r from-gray-300 to-gray-500 text-white';
-      case 3:
-        return 'bg-gradient-to-r from-amber-400 to-amber-600 text-white';
-      default:
-        return 'bg-gray-100 text-gray-700';
-    }
+  const getRankStyle = (rank: number) => {
+    if (rank === 1) return 'bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-200';
+    if (rank === 2) return 'bg-gradient-to-r from-gray-50 to-slate-50 border-gray-200';
+    if (rank === 3) return 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200';
+    return 'bg-white border-gray-200';
   };
 
   if (!user) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Đang tải...</p>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (
     <>
-      <LoadingOverlay isVisible={isLoading} message="Đang tải..." />
+      <LoadingOverlay isVisible={isLoading} message="Đang tải xếp hạng..." />
       <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <button
-              onClick={handleBackToDashboard}
-              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              <span>Quay lại Dashboard</span>
-            </button>
-            
-            <button 
-              onClick={() => router.push('/')}
-              className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
-            >
-              <div className="w-10 h-10 rounded-lg overflow-hidden">
-                <img 
-                  src="/17164524823262_logo-web-con-voi.png" 
-                  alt="Freedom Training Logo" 
-                  className="w-full h-full object-contain"
-                />
-              </div>
+        {/* Header */}
+        <header className="bg-white shadow-sm border-b">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center py-4">
+              <button 
+                onClick={() => router.push('/dashboard')}
+                className="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                <span className="font-medium">Quay lại Dashboard</span>
+              </button>
+              <h1 className="text-2xl font-bold text-gray-900">Bảng Xếp Hạng</h1>
+              <div className="w-32"></div>
+            </div>
+          </div>
+        </header>
+
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Stats Overview */}
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white mb-8">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Freedom Training</h1>
-                <p className="text-sm text-gray-600">Bảng xếp hạng</p>
-              </div>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header Section */}
-        <div className="text-center mb-8">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Bảng Xếp Hạng Các Trường</h2>
-          <p className="text-xl text-gray-600 mb-6">
-            Thi đua điểm TUTE giữa các trường đại học
-          </p>
-          
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            <div className="bg-white rounded-xl p-6 shadow-sm border">
-              <div className="flex items-center justify-center mb-2">
-                <Trophy className="w-8 h-8 text-yellow-500" />
-              </div>
-              <p className="text-sm text-gray-600">Trường dẫn đầu</p>
-              <p className="text-2xl font-bold text-gray-900">{sortedSchools[0]?.shortName}</p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-6 shadow-sm border">
-              <div className="flex items-center justify-center mb-2">
-                <Users className="w-8 h-8 text-blue-500" />
-              </div>
-              <p className="text-sm text-gray-600">Tổng số trường</p>
-              <p className="text-2xl font-bold text-gray-900">{sortedSchools.length}</p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-6 shadow-sm border">
-              <div className="flex items-center justify-center mb-2">
-                <Award className="w-8 h-8 text-green-500" />
-              </div>
-              <p className="text-sm text-gray-600">Điểm cao nhất</p>
-              <p className="text-2xl font-bold text-gray-900">{sortedSchools[0]?.totalTutePoints}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Top 3 Podium */}
-        <div className="mb-12">
-          <h3 className="text-2xl font-bold text-center text-gray-900 mb-8">Top 3 Trường Hàng Đầu</h3>
-          <div className="flex justify-center items-end space-x-4 max-w-4xl mx-auto">
-            {/* 2nd Place */}
-            {sortedSchools[1] && (
-              <div className="text-center">
-                <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-gray-200 mb-4 transform hover:scale-105 transition-transform">
-                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <BookOpen className="w-8 h-8 text-gray-600" />
-                  </div>
-                  <h4 className="font-bold text-lg text-gray-900 mb-2">{sortedSchools[1].shortName}</h4>
-                  <p className="text-sm text-gray-600 mb-3">{sortedSchools[1].name}</p>
-                  <div className="bg-gray-100 rounded-lg p-3">
-                    <p className="text-2xl font-bold text-gray-900">{sortedSchools[1].totalTutePoints}</p>
-                    <p className="text-sm text-gray-600">điểm TUTE</p>
-                  </div>
-                </div>
-                <div className="w-20 h-16 bg-gradient-to-t from-gray-300 to-gray-400 rounded-t-lg flex items-center justify-center">
-                  <Medal className="w-8 h-8 text-white" />
-                </div>
-              </div>
-            )}
-
-            {/* 1st Place */}
-            {sortedSchools[0] && (
-              <div className="text-center">
-                <div className="bg-white rounded-2xl p-8 shadow-xl border-2 border-yellow-200 mb-4 transform hover:scale-105 transition-transform">
-                  <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <BookOpen className="w-10 h-10 text-yellow-600" />
-                  </div>
-                  <h4 className="font-bold text-xl text-gray-900 mb-2">{sortedSchools[0].shortName}</h4>
-                  <p className="text-sm text-gray-600 mb-4">{sortedSchools[0].name}</p>
-                  <div className="bg-yellow-50 rounded-lg p-4">
-                    <p className="text-3xl font-bold text-yellow-900">{sortedSchools[0].totalTutePoints}</p>
-                    <p className="text-sm text-yellow-700">điểm TUTE</p>
-                  </div>
-                </div>
-                <div className="w-24 h-20 bg-gradient-to-t from-yellow-400 to-yellow-500 rounded-t-lg flex items-center justify-center">
-                  <Trophy className="w-10 h-10 text-white" />
-                </div>
-              </div>
-            )}
-
-            {/* 3rd Place */}
-            {sortedSchools[2] && (
-              <div className="text-center">
-                <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-amber-200 mb-4 transform hover:scale-105 transition-transform">
-                  <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <BookOpen className="w-8 h-8 text-amber-600" />
-                  </div>
-                  <h4 className="font-bold text-lg text-gray-900 mb-2">{sortedSchools[2].shortName}</h4>
-                  <p className="text-sm text-gray-600 mb-3">{sortedSchools[2].name}</p>
-                  <div className="bg-amber-50 rounded-lg p-3">
-                    <p className="text-2xl font-bold text-amber-900">{sortedSchools[2].totalTutePoints}</p>
-                    <p className="text-sm text-amber-700">điểm TUTE</p>
-                  </div>
-                </div>
-                <div className="w-20 h-12 bg-gradient-to-t from-amber-400 to-amber-500 rounded-t-lg flex items-center justify-center">
-                  <Award className="w-8 h-8 text-white" />
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Full Leaderboard */}
-        <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
-            <h3 className="text-xl font-bold text-white">Bảng Xếp Hạng Đầy Đủ</h3>
-          </div>
-          
-          <div className="divide-y divide-gray-200">
-            {sortedSchools.map((school, index) => {
-              const rank = index + 1;
-              const isUserSchool = school.id === user?.schoolId;
-              
-              return (
-                <div
-                  key={school.id}
-                  className={`p-6 flex items-center justify-between hover:bg-gray-50 transition-colors ${
-                    isUserSchool ? 'bg-blue-50 border-l-4 border-blue-500' : ''
-                  }`}
-                >
-                  <div className="flex items-center space-x-4">
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center ${getRankBadgeColor(rank)}`}>
-                      {rank <= 3 ? getRankIcon(rank) : <span className="font-bold">{rank}</span>}
-                    </div>
-                    
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <BookOpen className="w-6 h-6 text-gray-600" />
-                      </div>
-                      <div>
-                        <h4 className={`font-bold text-lg ${isUserSchool ? 'text-blue-900' : 'text-gray-900'}`}>
-                          {school.shortName}
-                          {isUserSchool && (
-                            <span className="ml-2 text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                              Trường của bạn
-                            </span>
-                          )}
-                        </h4>
-                        <p className="text-gray-600">{school.name}</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="text-right">
-                    <p className={`text-2xl font-bold ${isUserSchool ? 'text-blue-900' : 'text-gray-900'}`}>
-                      {school.totalTutePoints}
-                    </p>
-                    <p className="text-sm text-gray-600">điểm TUTE</p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* User's School Highlight */}
-        {user && (
-          <div className="mt-8 bg-blue-50 border border-blue-200 rounded-xl p-6">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-blue-600" />
-              </div>
-              <div>
-                <h4 className="font-bold text-blue-900">Trường của bạn</h4>
-                <p className="text-blue-700">
-                  {sortedSchools.find(s => s.id === user.schoolId)?.name} đang xếp hạng thứ{' '}
-                  <span className="font-bold">
-                    #{sortedSchools.findIndex(s => s.id === user.schoolId) + 1}
-                  </span>{' '}
-                  với {sortedSchools.find(s => s.id === user.schoolId)?.totalTutePoints} điểm TUTE
+                <h2 className="text-3xl font-bold mb-2">Cuộc Thi TUTE Points</h2>
+                <p className="text-blue-100 mb-4">
+                  Cạnh tranh giữa các trường đại học trên toàn quốc
                 </p>
+                <div className="flex items-center space-x-6">
+                  <div className="flex items-center space-x-2">
+                    <Users className="w-5 h-5" />
+                    <span>Tổng: {schools.length} trường</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <TrendingUp className="w-5 h-5" />
+                    <span>Cập nhật: Real-time</span>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-6 md:mt-0 flex space-x-4">
+                <div className="text-center">
+                  <p className="text-blue-100 text-sm">Điểm cá nhân</p>
+                  <p className="text-2xl font-bold">{user.tute_points}</p>
+                </div>
               </div>
             </div>
           </div>
-        )}
+
+          {/* Tab Navigation */}
+          <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg mb-8 max-w-md">
+            <button
+              onClick={() => setActiveTab('schools')}
+              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                activeTab === 'schools'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <div className="flex items-center justify-center space-x-2">
+                <GraduationCap className="w-4 h-4" />
+                <span>Xếp hạng trường</span>
+              </div>
+            </button>
+            <button
+              onClick={() => setActiveTab('users')}
+              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                activeTab === 'users'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <div className="flex items-center justify-center space-x-2">
+                <Users className="w-4 h-4" />
+                <span>Xếp hạng cá nhân</span>
+              </div>
+            </button>
+          </div>
+
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-8">
+              <p className="text-red-800">{error}</p>
+              <button 
+                onClick={fetchLeaderboardData}
+                className="mt-2 text-red-600 hover:text-red-800 underline"
+              >
+                Thử lại
+              </button>
+            </div>
+          )}
+
+          {/* Schools Leaderboard */}
+          {activeTab === 'schools' && (
+            <div className="space-y-4">
+              <h3 className="text-xl font-semibold text-gray-900 mb-6">
+                Xếp hạng các trường đại học
+              </h3>
+              {schools.map((school, index) => {
+                const rank = index + 1;
+                return (
+                  <div
+                    key={school.id}
+                    className={`${getRankStyle(rank)} rounded-xl p-6 border-2 transition-all hover:shadow-md`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center">
+                          {getRankIcon(rank)}
+                        </div>
+                        <div className="flex items-center space-x-4">
+                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100">
+                            <img 
+                              src={school.logo} 
+                              alt={school.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div>
+                            <h4 className="text-lg font-semibold text-gray-900">{school.name}</h4>
+                            <p className="text-gray-600">{school.short_name}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-2xl font-bold text-gray-900">
+                          {school.total_tute_points.toLocaleString()}
+                        </p>
+                        <p className="text-sm text-gray-600">điểm TUTE</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Users Leaderboard */}
+          {activeTab === 'users' && (
+            <div className="space-y-4">
+              <h3 className="text-xl font-semibold text-gray-900 mb-6">
+                Xếp hạng cá nhân
+              </h3>
+              {users.map((userItem, index) => {
+                const rank = index + 1;
+                const isCurrentUser = userItem.id === user.id;
+                return (
+                  <div
+                    key={userItem.id}
+                    className={`${getRankStyle(rank)} rounded-xl p-6 border-2 transition-all hover:shadow-md ${
+                      isCurrentUser ? 'ring-2 ring-blue-500' : ''
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center">
+                          {getRankIcon(rank)}
+                        </div>
+                        <div>
+                          <h4 className={`text-lg font-semibold ${isCurrentUser ? 'text-blue-600' : 'text-gray-900'}`}>
+                            {userItem.name} {isCurrentUser && '(Bạn)'}
+                          </h4>
+                          <p className="text-gray-600">ID: {userItem.school_id}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className={`text-2xl font-bold ${isCurrentUser ? 'text-blue-600' : 'text-gray-900'}`}>
+                          {userItem.tute_points.toLocaleString()}
+                        </p>
+                        <p className="text-sm text-gray-600">điểm TUTE</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
     </>
   );
 } 

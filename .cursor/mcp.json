@@ -22,6 +22,24 @@
       ],
       "disabled": true,
       "alwaysAllow": []
+    },
+    "browser-use": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-browser-use@latest"
+      ],
+      "env": {
+        "MCP_LLM_PROVIDER": "openai",
+        "MCP_LLM_MODEL_NAME": "gpt-4o-mini",
+        "MCP_LLM_OPENAI_API_KEY": "${OPENAI_API_KEY}",
+        "MCP_BROWSER_HEADLESS": "false",
+        "MCP_BROWSER_WINDOW_WIDTH": "1440",
+        "MCP_BROWSER_WINDOW_HEIGHT": "1080",
+        "MCP_AGENT_TOOL_USE_VISION": "true",
+        "MCP_SERVER_LOGGING_LEVEL": "INFO"
+      },
+      "disabled": false,
+      "alwaysAllow": []
     }
   }
 } 

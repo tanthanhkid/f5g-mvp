@@ -10,7 +10,6 @@ import TextBlock from '@/components/ContentBlocks/TextBlock';
 import VideoBlock from '@/components/ContentBlocks/VideoBlock';
 import QuizBlock from '@/components/ContentBlocks/QuizBlock';
 import NativeAd from '@/components/NativeAd';
-import quizTopicsData from '../../../../data/quiz-topics.json';
 
 interface QuizTopic {
   id: string;
@@ -33,6 +32,59 @@ export default function EnhancedQuizPage() {
   const [session, setSession] = useState<EnhancedQuizSession | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState('');
+
+  // Fetch topic from API
+  const fetchTopic = async () => {
+    try {
+      setIsLoading(true);
+      setError('');
+
+      const response = await fetch(`/api/quiz-topics/${topicId}`);
+      const data = await response.json();
+
+      if (data.success) {
+        const foundTopic = data.topic;
+        setTopic(foundTopic);
+        
+        // Initialize session
+        const newSession: EnhancedQuizSession = {
+          id: `session_${Date.now()}`,
+          userId: user?.id || '',
+          topic: foundTopic.title,
+          learningContent: foundTopic.learningContent,
+          questions: foundTopic.quizQuestions,
+          learningProgress: {
+            completedBlocks: [],
+            videoWatchTime: {}
+          },
+          answers: [],
+          score: 0,
+          tutePointsEarned: 0,
+          startedAt: new Date(),
+          phase: 'learning',
+          currentBlockIndex: 0,
+          currentQuestionIndex: 0
+        };
+        
+        setSession(newSession);
+      } else {
+        setError(data.error || 'Không thể tải topic');
+        // Redirect after a delay
+        setTimeout(() => {
+          router.push('/quiz-topics');
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Error fetching topic:', error);
+      setError('Lỗi kết nối, vui lòng thử lại');
+      setTimeout(() => {
+        router.push('/quiz-topics');
+      }, 2000);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Debug: Log session changes
   useEffect(() => {
@@ -45,36 +97,9 @@ export default function EnhancedQuizPage() {
       return;
     }
 
-    // Find topic by ID
-    const foundTopic = (quizTopicsData as QuizTopic[]).find(t => t.id === topicId);
-    if (foundTopic) {
-      setTopic(foundTopic);
-      
-      // Initialize session
-      const newSession: EnhancedQuizSession = {
-        id: `session_${Date.now()}`,
-        userId: user.id,
-        topic: foundTopic.title,
-        learningContent: foundTopic.learningContent,
-        questions: foundTopic.quizQuestions,
-        learningProgress: {
-          completedBlocks: [],
-          videoWatchTime: {}
-        },
-        answers: [],
-        score: 0,
-        tutePointsEarned: 0,
-        startedAt: new Date(),
-        phase: 'learning',
-        currentBlockIndex: 0,
-        currentQuestionIndex: 0
-      };
-      
-      setSession(newSession);
-    } else {
-      router.push('/quiz-topics');
+    if (topicId) {
+      fetchTopic();
     }
-    setIsLoading(false);
   }, [user, router, topicId]);
 
   const handleBlockComplete = (blockId: string, data?: { answer: number[] | string; isCorrect: boolean }) => {

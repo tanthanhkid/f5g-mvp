@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { BookOpen, Clock, Play, ArrowLeft, GraduationCap, Search, X } from 'lucide-react';
 import LoadingOverlay from '@/components/LoadingOverlay';
-import quizTopicsData from '../../../data/quiz-topics.json';
 
 interface QuizTopic {
   id: string;
@@ -25,44 +24,55 @@ export default function QuizTopicsPage() {
   const { user } = useAuth();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingTopics, setIsLoadingTopics] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedAgeGroup, setSelectedAgeGroup] = useState('all');
+  const [topics, setTopics] = useState<QuizTopic[]>([]);
+  const [error, setError] = useState('');
 
-  // Use useMemo for topics to prevent unnecessary re-creation
-  const topics = useMemo(() => quizTopicsData as QuizTopic[], []);
+  // Fetch topics from API
+  const fetchTopics = async () => {
+    try {
+      setIsLoadingTopics(true);
+      setError('');
+      
+      const params = new URLSearchParams();
+      if (selectedCategory !== 'all') params.append('category', selectedCategory);
+      if (selectedAgeGroup !== 'all') params.append('ageGroup', selectedAgeGroup);
+      if (searchQuery.trim()) params.append('search', searchQuery.trim());
 
-  // Get unique categories and age groups
-  const categories = useMemo(() => ['all', ...Array.from(new Set(topics.map(topic => topic.category)))], [topics]);
-  const ageGroups = useMemo(() => ['all', ...Array.from(new Set(topics.map(topic => topic.ageGroup)))], [topics]);
+      const response = await fetch(`/api/quiz-topics?${params.toString()}`);
+      const data = await response.json();
 
-  // Use useMemo for filtered topics to prevent infinite loops
-  const filteredTopics = useMemo(() => {
-    let filtered = topics;
-
-    // Search filter
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(topic => 
-        topic.title.toLowerCase().includes(query) ||
-        topic.description.toLowerCase().includes(query) ||
-        topic.keywords.some(keyword => keyword.toLowerCase().includes(query)) ||
-        topic.category.toLowerCase().includes(query)
-      );
+      if (data.success) {
+        setTopics(data.topics);
+      } else {
+        setError(data.error || 'Không thể tải danh sách chủ đề');
+      }
+    } catch (error) {
+      console.error('Error fetching topics:', error);
+      setError('Lỗi kết nối, vui lòng thử lại');
+    } finally {
+      setIsLoadingTopics(false);
     }
+  };
 
-    // Category filter
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(topic => topic.category === selectedCategory);
-    }
+  // Get unique categories and age groups from topics
+  const categories = useMemo(() => {
+    const uniqueCategories = Array.from(new Set(topics.map(topic => topic.category)));
+    return ['all', ...uniqueCategories];
+  }, [topics]);
 
-    // Age group filter
-    if (selectedAgeGroup !== 'all') {
-      filtered = filtered.filter(topic => topic.ageGroup === selectedAgeGroup);
-    }
+  const ageGroups = useMemo(() => {
+    const uniqueAgeGroups = Array.from(new Set(topics.map(topic => topic.ageGroup)));
+    return ['all', ...uniqueAgeGroups];
+  }, [topics]);
 
-    return filtered;
-  }, [topics, searchQuery, selectedCategory, selectedAgeGroup]);
+  // Fetch topics when component mounts or filters change
+  useEffect(() => {
+    fetchTopics();
+  }, [selectedCategory, selectedAgeGroup, searchQuery]);
 
   useEffect(() => {
     if (!user) {
@@ -153,7 +163,7 @@ export default function QuizTopicsPage() {
               
               <div className="text-right">
                 <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                <p className="text-xs text-gray-600">{user.tutePoints} điểm TUTE</p>
+                <p className="text-xs text-gray-600">{user.tute_points} điểm TUTE</p>
               </div>
             </div>
           </div>
@@ -198,13 +208,13 @@ export default function QuizTopicsPage() {
                   >
                     {categories.map(category => (
                       <option key={category} value={category} className="text-gray-900">
-                        {category === 'all' ? 'Tất cả chủ đề' : category}
+                        {category === 'all' ? 'Tất cả danh mục' : category}
                       </option>
                     ))}
                   </select>
                 </div>
 
-                <div className="min-w-[180px]">
+                <div className="min-w-[160px]">
                   <select
                     value={selectedAgeGroup}
                     onChange={(e) => setSelectedAgeGroup(e.target.value)}
@@ -212,7 +222,7 @@ export default function QuizTopicsPage() {
                   >
                     {ageGroups.map(ageGroup => (
                       <option key={ageGroup} value={ageGroup} className="text-gray-900">
-                        {ageGroup === 'all' ? 'Tất cả lứa tuổi' : ageGroup}
+                        {ageGroup === 'all' ? 'Tất cả độ tuổi' : ageGroup}
                       </option>
                     ))}
                   </select>
@@ -221,146 +231,117 @@ export default function QuizTopicsPage() {
                 {(searchQuery || selectedCategory !== 'all' || selectedAgeGroup !== 'all') && (
                   <button
                     onClick={clearFilters}
-                    className="px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors flex items-center space-x-2"
+                    className="px-4 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center gap-2 min-w-fit"
                   >
                     <X className="w-4 h-4" />
-                    <span>Xóa bộ lọc</span>
+                    Xóa bộ lọc
                   </button>
                 )}
               </div>
             </div>
-
-            {/* Search Results Info */}
-            <div className="mt-4 text-sm text-gray-600">
-              Tìm thấy <span className="font-semibold text-gray-900">{filteredTopics.length}</span> bài học
-              {searchQuery && (
-                <span> cho từ khóa &quot;<span className="font-semibold text-blue-600">{searchQuery}</span>&quot;</span>
-              )}
-            </div>
           </div>
 
-          {/* Topics Grid */}
-          {filteredTopics.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredTopics.map((topic) => (
-                <div
-                  key={topic.id}
-                  className="bg-white rounded-xl p-6 shadow-sm border hover:shadow-lg transition-all duration-200 cursor-pointer group"
-                  onClick={() => handleSelectTopic(topic.id)}
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="text-4xl mb-3">{topic.icon}</div>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(topic.difficulty)}`}>
-                      {getDifficultyText(topic.difficulty)}
-                    </span>
-                  </div>
-
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                    {topic.title}
-                  </h3>
-                  
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                    {topic.description}
-                  </p>
-
-                  {/* Topic Info */}
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <div className="flex items-center space-x-1">
-                        <BookOpen className="w-4 h-4" />
-                        <span>{topic.learningContent.length} nội dung</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <Play className="w-4 h-4" />
-                        <span>{topic.quizQuestions.length} câu hỏi</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <div className="flex items-center space-x-1">
-                        <Clock className="w-4 h-4" />
-                        <span>~{topic.estimatedTime} phút</span>
-                      </div>
-                      <span className="text-xs bg-gray-100 px-2 py-1 rounded">
-                        {topic.ageGroup}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Category Badge */}
-                  <div className="mb-4">
-                    <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-                      {topic.category}
-                    </span>
-                  </div>
-
-                  {/* Learning Flow Preview */}
-                  <div className="border-t pt-4">
-                    <p className="text-xs text-gray-500 mb-2">Luồng học tập:</p>
-                    <div className="flex items-center space-x-2 text-xs">
-                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">📖 Học</span>
-                      <span className="text-gray-400">→</span>
-                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded">🎯 Quiz</span>
-                      <span className="text-gray-400">→</span>
-                      <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded">🏆 Điểm</span>
-                    </div>
-                  </div>
-
-                  {/* Start Button */}
-                  <button className="w-full mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center space-x-2 group-hover:bg-blue-700">
-                    <GraduationCap className="w-4 h-4" />
-                    <span>Bắt đầu học</span>
-                  </button>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Search className="w-12 h-12 text-gray-400" />
-              </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Không tìm thấy bài học</h3>
-              <p className="text-gray-600 mb-4">
-                Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc để tìm bài học phù hợp
-              </p>
-              <button
-                onClick={clearFilters}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <p className="text-red-800 text-sm">{error}</p>
+              <button 
+                onClick={fetchTopics}
+                className="mt-2 text-red-600 hover:text-red-800 text-sm underline"
               >
-                Xóa tất cả bộ lọc
+                Thử lại
               </button>
             </div>
           )}
 
-          {/* Info Section */}
-          <div className="mt-12 bg-white rounded-xl p-6 shadow-sm border">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">💡 Về chương trình thường thức cuộc sống</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                  <BookOpen className="w-6 h-6 text-blue-600" />
-                </div>
-                <h4 className="font-medium text-gray-900 mb-2">1. Học kỹ năng sống</h4>
-                <p className="text-sm text-gray-600">Kiến thức thiết yếu cho cuộc sống hàng ngày</p>
-              </div>
-              
-              <div className="text-center">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                  <Play className="w-6 h-6 text-green-600" />
-                </div>
-                <h4 className="font-medium text-gray-900 mb-2">2. Kiểm tra hiểu biết</h4>
-                <p className="text-sm text-gray-600">Quiz giúp củng cố và ghi nhớ kiến thức</p>
-              </div>
-              
-              <div className="text-center">
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                  <GraduationCap className="w-6 h-6 text-purple-600" />
-                </div>
-                <h4 className="font-medium text-gray-900 mb-2">3. Tích lũy điểm số</h4>
-                <p className="text-sm text-gray-600">Nhận điểm TUTE cho bản thân và trường</p>
-              </div>
+          {/* Loading Topics */}
+          {isLoadingTopics && (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+              <p className="mt-4 text-gray-600">Đang tải danh sách chủ đề...</p>
             </div>
-          </div>
+          )}
+
+          {/* Topics Grid */}
+          {!isLoadingTopics && !error && (
+            <>
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-semibold text-gray-900">
+                  Có {topics.length} chủ đề học tập
+                </h3>
+              </div>
+
+              {topics.length === 0 ? (
+                <div className="text-center py-12">
+                  <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-medium text-gray-900 mb-2">Không tìm thấy chủ đề nào</h3>
+                  <p className="text-gray-600 mb-4">Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc</p>
+                  <button
+                    onClick={clearFilters}
+                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Xem tất cả chủ đề
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {topics.map((topic) => (
+                    <div
+                      key={topic.id}
+                      className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 overflow-hidden"
+                    >
+                      <div className="p-6">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="text-3xl">{topic.icon}</div>
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(topic.difficulty)}`}>
+                            {getDifficultyText(topic.difficulty)}
+                          </span>
+                        </div>
+
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">{topic.title}</h3>
+                        <p className="text-gray-600 text-sm mb-4 line-clamp-3">{topic.description}</p>
+
+                        <div className="flex items-center gap-4 text-xs text-gray-500 mb-4">
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            <span>{topic.estimatedTime} phút</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <BookOpen className="w-3 h-3" />
+                            <span>{topic.category}</span>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-wrap gap-1 mb-4">
+                          {topic.keywords.slice(0, 3).map((keyword, index) => (
+                            <span
+                              key={index}
+                              className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md"
+                            >
+                              {keyword}
+                            </span>
+                          ))}
+                          {topic.keywords.length > 3 && (
+                            <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md">
+                              +{topic.keywords.length - 3}
+                            </span>
+                          )}
+                        </div>
+
+                        <button
+                          onClick={() => handleSelectTopic(topic.id)}
+                          className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 font-medium"
+                        >
+                          <Play className="w-4 h-4" />
+                          Bắt đầu học
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
     </>

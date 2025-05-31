@@ -2,7 +2,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, AuthContextType } from '@/types';
-import usersData from '../../data/users.json';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -14,7 +13,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Kiểm tra localStorage để khôi phục session
     const savedUser = localStorage.getItem('freedom-training-user');
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      try {
+        const parsedUser = JSON.parse(savedUser);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error('Error parsing saved user:', error);
+        localStorage.removeItem('freedom-training-user');
+      }
     }
     setIsLoading(false);
   }, []);
@@ -22,21 +27,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     
-    // Tìm user trong dữ liệu JSON
-    const foundUser = usersData.find(
-      u => u.email === email && u.password === password
-    );
+    try {
+      // Gọi API login với database
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (foundUser) {
-      const userWithoutPassword = { ...foundUser, password: '' };
-      setUser(userWithoutPassword);
-      localStorage.setItem('freedom-training-user', JSON.stringify(userWithoutPassword));
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        // Login thành công
+        const userWithoutPassword = { ...data.user };
+        setUser(userWithoutPassword);
+        localStorage.setItem('freedom-training-user', JSON.stringify(userWithoutPassword));
+        setIsLoading(false);
+        return true;
+      } else {
+        // Login thất bại
+        console.error('Login failed:', data.error);
+        setIsLoading(false);
+        return false;
+      }
+    } catch (error) {
+      console.error('Login error:', error);
       setIsLoading(false);
-      return true;
+      return false;
     }
-
-    setIsLoading(false);
-    return false;
   };
 
   const logout = () => {

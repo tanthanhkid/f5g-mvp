@@ -3,16 +3,16 @@ export interface User {
   email: string;
   password: string;
   name: string;
-  schoolId: string;
-  tutePoints: number;
+  school_id: string;
+  tute_points: number;
 }
 
 export interface School {
   id: string;
   name: string;
-  shortName: string;
+  short_name: string;
   logo: string;
-  totalTutePoints: number;
+  total_tute_points: number;
 }
 
 // Content block types for lessons

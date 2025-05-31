@@ -3,7 +3,6 @@
 import { useRouter } from 'next/navigation';
 import { BookOpen, Trophy, Users, ArrowRight, Sparkles, Target, Award, TrendingUp, Bell, Gift, Coins } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
-import investorsData from '../../data/investors.json';
 import InvestorShowcase from '../components/InvestorShowcase';
 import InvestorRankingMobile from '../components/InvestorRankingMobile';
 
@@ -31,7 +30,26 @@ export default function HomePage() {
   const router = useRouter();
   const [currentDate, setCurrentDate] = useState('');
   const [isLoaded, setIsLoaded] = useState(false);
+  const [investorData, setInvestorData] = useState<InvestorData | null>(null);
+  const [isLoadingInvestors, setIsLoadingInvestors] = useState(true);
   const hasShownWelcome = useRef(false);
+
+  // Fetch investors data
+  const fetchInvestors = async () => {
+    try {
+      setIsLoadingInvestors(true);
+      const response = await fetch('/api/investors?limit=50');
+      const result = await response.json();
+      
+      if (result.success) {
+        setInvestorData(result.data);
+      }
+    } catch (error) {
+      console.error('Error fetching investors:', error);
+    } finally {
+      setIsLoadingInvestors(false);
+    }
+  };
 
   useEffect(() => {
     const today = new Date();
@@ -44,6 +62,9 @@ export default function HomePage() {
     
     // Animation delay
     setTimeout(() => setIsLoaded(true), 100);
+
+    // Fetch investors data
+    fetchInvestors();
 
     // Welcome notification - chỉ hiển thị 1 lần
     // if (!hasShownWelcome.current) {
@@ -221,21 +242,40 @@ export default function HomePage() {
             {/* Showcase Nhà Tài Trợ */}
             <div className={`mt-16 sm:mt-20 transition-all duration-1000 delay-600 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
               <div className="max-w-6xl mx-auto">
-                {/* Desktop: InvestorShowcase, Mobile: InvestorRankingMobile */}
-                <div className="hidden lg:block">
-                  <InvestorShowcase 
-                    investorData={investorsData as InvestorData} 
-                    formatCurrency={formatCurrency}
-                  />
-                </div>
-                <div className="lg:hidden">
-                  <InvestorRankingMobile 
-                    investors={investorsData.investors}
-                    formatCurrency={formatCurrency}
-                    totalPool={investorsData.totalPool}
-                    dailyPool={investorsData.dailyPool}
-                  />
-                </div>
+                {isLoadingInvestors ? (
+                  <div className="text-center py-12">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+                    <p className="mt-4 text-gray-600">Đang tải thông tin nhà đầu tư...</p>
+                  </div>
+                ) : investorData ? (
+                  <>
+                    {/* Desktop: InvestorShowcase, Mobile: InvestorRankingMobile */}
+                    <div className="hidden lg:block">
+                      <InvestorShowcase 
+                        investorData={investorData as InvestorData} 
+                        formatCurrency={formatCurrency}
+                      />
+                    </div>
+                    <div className="lg:hidden">
+                      <InvestorRankingMobile 
+                        investors={investorData.investors}
+                        formatCurrency={formatCurrency}
+                        totalPool={investorData.totalPool}
+                        dailyPool={investorData.dailyPool}
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center py-12">
+                    <p className="text-gray-600">Không thể tải thông tin nhà đầu tư</p>
+                    <button 
+                      onClick={fetchInvestors}
+                      className="mt-2 text-blue-600 hover:text-blue-800 underline"
+                    >
+                      Thử lại
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

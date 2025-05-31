@@ -5,15 +5,19 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { School } from '@/types';
 import { BookOpen, Trophy, Users, Play, LogOut, Award, Calendar, TrendingUp, GraduationCap } from 'lucide-react';
-import schoolsData from '../../../data/schools.json';
-import usersData from '../../../data/users.json';
 import LoadingOverlay from '@/components/LoadingOverlay';
+
+interface LeaderboardResponse {
+  success: boolean;
+  leaderboard: School[];
+}
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const router = useRouter();
   const [userSchool, setUserSchool] = useState<School | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [schools, setSchools] = useState<School[]>([]);
   const [userRankings, setUserRankings] = useState({
     dailyRank: 0,
     monthlyRank: 0,
@@ -26,35 +30,47 @@ export default function Dashboard() {
       return;
     }
 
-    // Tìm thông tin trường của user
-    const school = schoolsData.find(s => s.id === user.schoolId);
-    setUserSchool(school || null);
-
-    // Tính toán thứ hạng người chơi
-    const calculateUserRankings = () => {
-      // Giả lập điểm số hàng ngày và hàng tháng
-      const allUsers = usersData.map(u => ({
-        ...u,
-        dailyPoints: Math.floor(Math.random() * 100) + u.tutePoints * 0.1,
-        monthlyPoints: Math.floor(Math.random() * 500) + u.tutePoints * 0.3
-      }));
-
-      // Sắp xếp theo điểm hàng ngày
-      const dailySorted = [...allUsers].sort((a, b) => b.dailyPoints - a.dailyPoints);
-      const dailyRank = dailySorted.findIndex(u => u.id === user.id) + 1;
-
-      // Sắp xếp theo điểm hàng tháng  
-      const monthlySorted = [...allUsers].sort((a, b) => b.monthlyPoints - a.monthlyPoints);
-      const monthlyRank = monthlySorted.findIndex(u => u.id === user.id) + 1;
-
-      setUserRankings({
-        dailyRank,
-        monthlyRank,
-        totalUsers: allUsers.length
-      });
+    // Fetch schools data từ database
+    const fetchSchoolsData = async () => {
+      try {
+        const response = await fetch('/api/leaderboard?type=schools');
+        const data: LeaderboardResponse = await response.json();
+        
+        if (data.success) {
+          setSchools(data.leaderboard);
+          
+          // Tìm thông tin trường của user
+          const school = data.leaderboard.find(s => s.id === user.school_id);
+          setUserSchool(school || null);
+        }
+      } catch (error) {
+        console.error('Error fetching schools data:', error);
+      }
     };
 
-    calculateUserRankings();
+    // Fetch user leaderboard data để tính ranking
+    const fetchUserRankings = async () => {
+      try {
+        const response = await fetch('/api/leaderboard?type=users&limit=100');
+        const data = await response.json();
+        
+        if (data.success) {
+          // Tính toán thứ hạng người chơi (simplified)
+          const userIndex = data.leaderboard.findIndex((u: any) => u.id === user.id);
+          
+          setUserRankings({
+            dailyRank: userIndex >= 0 ? userIndex + 1 : 0,
+            monthlyRank: userIndex >= 0 ? userIndex + 1 : 0,
+            totalUsers: data.leaderboard.length
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching user rankings:', error);
+      }
+    };
+
+    fetchSchoolsData();
+    fetchUserRankings();
   }, [user, router]);
 
   const handleLogout = () => {
@@ -85,6 +101,11 @@ export default function Dashboard() {
     );
   }
 
+  // Tính school ranking từ schools data
+  const schoolRank = schools
+    .sort((a, b) => b.total_tute_points - a.total_tute_points)
+    .findIndex(s => s.id === userSchool.id) + 1;
+
   return (
     <>
       <LoadingOverlay isVisible={isLoading} message="Đang tải..." />
@@ -113,7 +134,7 @@ export default function Dashboard() {
             <div className="flex items-center space-x-2 sm:space-x-4">
               <div className="text-right">
                 <p className="text-xs sm:text-sm font-medium text-gray-900 truncate max-w-24 sm:max-w-none">{user.name}</p>
-                <p className="text-xs text-gray-600">{userSchool.shortName}</p>
+                <p className="text-xs text-gray-600">{userSchool.short_name}</p>
               </div>
               <button
                 onClick={handleLogout}
@@ -139,11 +160,11 @@ export default function Dashboard() {
               <div className="flex items-center space-x-6">
                 <div className="flex items-center space-x-2">
                   <Trophy className="w-5 h-5" />
-                  <span className="font-semibold">{user.tutePoints} điểm TUTE</span>
+                  <span className="font-semibold">{user.tute_points} điểm TUTE</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Award className="w-5 h-5" />
-                  <span>Trường: {userSchool.totalTutePoints} điểm</span>
+                  <span>Trường: {userSchool.total_tute_points} điểm</span>
                 </div>
               </div>
             </div>
@@ -165,7 +186,7 @@ export default function Dashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Điểm TUTE cá nhân</p>
-                <p className="text-3xl font-bold text-gray-900">{user.tutePoints}</p>
+                <p className="text-3xl font-bold text-gray-900">{user.tute_points}</p>
               </div>
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                 <Trophy className="w-6 h-6 text-blue-600" />
@@ -177,7 +198,7 @@ export default function Dashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Điểm trường</p>
-                <p className="text-3xl font-bold text-gray-900">{userSchool.totalTutePoints}</p>
+                <p className="text-3xl font-bold text-gray-900">{userSchool.total_tute_points}</p>
               </div>
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                 <Users className="w-6 h-6 text-green-600" />
@@ -189,11 +210,7 @@ export default function Dashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Xếp hạng trường</p>
-                <p className="text-3xl font-bold text-gray-900">
-                  #{schoolsData
-                    .sort((a, b) => b.totalTutePoints - a.totalTutePoints)
-                    .findIndex(s => s.id === userSchool.id) + 1}
-                </p>
+                <p className="text-3xl font-bold text-gray-900">#{schoolRank}</p>
               </div>
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
                 <Award className="w-6 h-6 text-purple-600" />
@@ -280,8 +297,8 @@ export default function Dashboard() {
             </div>
             <div>
               <h4 className="text-lg font-semibold text-gray-900">{userSchool.name}</h4>
-              <p className="text-gray-600">Mã trường: {userSchool.shortName}</p>
-              <p className="text-sm text-gray-500">Tổng điểm TUTE: {userSchool.totalTutePoints}</p>
+              <p className="text-gray-600">Mã trường: {userSchool.short_name}</p>
+              <p className="text-sm text-gray-500">Tổng điểm TUTE: {userSchool.total_tute_points}</p>
             </div>
           </div>
         </div>
